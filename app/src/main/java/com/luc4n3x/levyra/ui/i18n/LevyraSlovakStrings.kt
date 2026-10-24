@@ -336,6 +336,8 @@ internal fun skLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Dočasná rýchlosť, kým držíš",
     "downloadEngineSection" to "MOTOR SŤAHOVANIA 3.0",
     "wifiOnly" to "Len cez Wi-Fi",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager spúšťa sťahovanie len v nemeranej sieti",
     "chargingOnly" to "Len počas nabíjania",
     "chargingOnlySubtitle" to "Znižuje spotrebu batérie a zahrievanie pri dlhom sťahovaní",

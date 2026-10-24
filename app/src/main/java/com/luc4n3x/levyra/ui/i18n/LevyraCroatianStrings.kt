@@ -336,6 +336,8 @@ internal fun hrLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Privremena brzina dok držiš",
     "downloadEngineSection" to "POGON ZA PREUZIMANJE 3.0",
     "wifiOnly" to "Samo Wi-Fi",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager pokreće preuzimanja samo na mreži bez ograničenja podataka",
     "chargingOnly" to "Samo tijekom punjenja",
     "chargingOnlySubtitle" to "Smanjuje potrošnju baterije i zagrijavanje kod dugih preuzimanja",

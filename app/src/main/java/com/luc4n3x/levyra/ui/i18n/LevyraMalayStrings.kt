@@ -336,6 +336,8 @@ internal fun msLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Kelajuan sementara semasa anda menahan",
     "downloadEngineSection" to "ENJIN MUAT TURUN 3.0",
     "wifiOnly" to "Wi-Fi sahaja",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager memulakan muat turun hanya pada rangkaian tanpa had data",
     "chargingOnly" to "Hanya semasa mengecas",
     "chargingOnlySubtitle" to "Mengurangkan penggunaan bateri dan suhu semasa muat turun panjang",

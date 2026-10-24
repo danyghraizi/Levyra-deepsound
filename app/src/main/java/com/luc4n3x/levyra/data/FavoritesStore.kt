@@ -60,18 +60,20 @@ class FavoritesStore(context: Context) {
     }
 
     suspend fun addFavorites(tracks: List<Track>): List<Track> = withContext(Dispatchers.IO) {
-        favoritesStoreMutationMutex.withLock {
+        val (updated, added) = favoritesStoreMutationMutex.withLock {
             val current = loadInternal(failOnReadError = true)
             val existingKeys = current.mapTo(hashSetOf(), ::favoriteTrackKey)
             val added = tracks.filter { it.id.isNotBlank() && existingKeys.add(favoriteTrackKey(it)) }
             val updated = added + current
             if (added.isNotEmpty()) saveAndCompleteMigration(updated)
-            updated
+            updated to added
         }
+        FavoriteAutoDownloader.enqueue(appContext, added)
+        updated
     }
 
     suspend fun toggleFavorite(track: Track): List<Track> = withContext(Dispatchers.IO) {
-        favoritesStoreMutationMutex.withLock {
+        val (updated, added) = favoritesStoreMutationMutex.withLock {
             val current = loadInternal()
             val targetKey = favoriteTrackKey(track)
             val existingIndex = current.indexOfFirst { favorite ->
@@ -83,17 +85,22 @@ class FavoritesStore(context: Context) {
                 listOf(track) + current
             }
             saveAndCompleteMigration(updated)
-            updated
+            updated to if (existingIndex >= 0) emptyList() else listOf(track)
         }
+        FavoriteAutoDownloader.enqueue(appContext, added)
+        updated
     }
 
     suspend fun setFavorite(track: Track, favorite: Boolean): List<Track> = withContext(Dispatchers.IO) {
-        favoritesStoreMutationMutex.withLock {
+        val (updated, added) = favoritesStoreMutationMutex.withLock {
             val current = loadInternal(failOnReadError = true)
+            val alreadyFavorite = current.any { favoriteTrackKey(it) == favoriteTrackKey(track) }
             val updated = favoriteTracksWithMembership(current, track, favorite)
             if (updated != current) saveAndCompleteMigration(updated)
-            updated
+            updated to if (favorite && !alreadyFavorite) listOf(track) else emptyList()
         }
+        FavoriteAutoDownloader.enqueue(appContext, added)
+        updated
     }
 
     internal fun observeMembership(): Flow<FavoriteMembership> = dao.observeIdentities()
@@ -102,12 +109,15 @@ class FavoritesStore(context: Context) {
         .flowOn(Dispatchers.IO)
 
     suspend fun toggleFavorites(tracks: List<Track>): List<Track> = withContext(Dispatchers.IO) {
-        favoritesStoreMutationMutex.withLock {
+        val (updated, added) = favoritesStoreMutationMutex.withLock {
             val current = loadInternal()
+            val before = current.mapTo(hashSetOf(), ::favoriteTrackKey)
             val updated = toggleFavoriteTracks(current, tracks)
             if (updated != current) saveAndCompleteMigration(updated)
-            updated
+            updated to updated.filter { favoriteTrackKey(it) !in before }
         }
+        FavoriteAutoDownloader.enqueue(appContext, added)
+        updated
     }
 
     private suspend fun loadInternal(failOnReadError: Boolean = false): List<Track> {

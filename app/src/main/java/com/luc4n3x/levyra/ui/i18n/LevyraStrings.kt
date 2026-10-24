@@ -1316,6 +1316,8 @@ class LevyraStrings private constructor(
     val downloadEngineSection: String get() = value("downloadEngineSection")
     val wifiOnly: String get() = value("wifiOnly")
     val wifiOnlySubtitle: String get() = value("wifiOnlySubtitle")
+    val autoDownloadFavorites: String get() = value("autoDownloadFavorites")
+    val autoDownloadFavoritesSubtitle: String get() = value("autoDownloadFavoritesSubtitle")
     val chargingOnly: String get() = value("chargingOnly")
     val chargingOnlySubtitle: String get() = value("chargingOnlySubtitle")
     val resumeDownload: String get() = value("resumeDownload")
@@ -2010,7 +2012,7 @@ class LevyraStrings private constructor(
     fun formatPauseDownload(title: String): String = "$pauseDownload ${directionalValue(title)}"
 
     companion object {
-        private val requiredKeys = setOf("welcomeBadge", "welcomeTitle", "languageQuestion", "nameQuestion", "namePlaceholder", "tasteQuestion", "skipAndContinue", "startListening", "settings", "settingsSubtitle", "design", "playback", "preferences", "app", "animations", "animationsSubtitle", "dynamicColor", "dynamicColorSubtitle", "sponsorBlock", "sponsorBlockSubtitle", "skipSilence", "skipSilenceSubtitle", "redoQuestionnaire", "redoQuestionnaireSubtitle", "language", "languageSubtitle", "home", "search", "library", "player", "queue", "lyrics", "related", "song", "video", "nowPlaying", "emptyPlayer", "phoneSpeaker", "connected", "volume", "audioQuality", "done", "queueEmpty", "lyricsUnavailable", "synced", "libraryTitle", "librarySubtitle", "playlists", "newItem", "downloads", "favorites", "recent", "quickPicks", "play", "newReleases", "albumsForYou", "top50Unavailable", "artists", "albumsAndSingles", "songs", "searchPlaceholder", "back", "clear", "voice", "createPlaylistHint", "selectLanguagePrompt", "explore", "exploreTitle", "exploreSubtitle", "exploreMoods", "exploreSamples", "exploreSamplesSubtitle", "exploreSamplesError", "exploreSamplesRetry", "exploreFresh", "exploreNewVideos", "exploreEmpty", "localWaveName", "localWaveEmoji", "localWaveQuery", "exploreNewReleases", "exploreRapDrill", "exploreElectronic", "explorePopGlobal", "exploreRnbSoul", "exploreRockAlt", "exploreLatino", "exploreLofiChill", "exploreJpopAnime", "followArtist", "followingArtist", "releaseRadar", "similarArtists", "similarToFollowed", "theme", "themeSubtitle", "personalOrbitTitle", "personalOrbitSubtitle", "voicesTitle", "voicesSubtitle", "totalComments", "engagement", "audioEngine", "audioEngineSubtitle", "equalizer", "equalizerSubtitle", "preset", "bassBoost", "virtualizer", "crossfade", "djSoft", "replayGain", "tempo", "pitch", "gapless", "restartRequiredTitle", "restartRequiredBody", "restartNow", "later", "audioQualityAuto", "audioQualityHigh", "audioQualityLow", "pulseSectionBand", "pulseTitle", "pulseSubtitle", "followedArtistsTitle", "followedArtistsSubtitle", "listeningHistoryEmptyTitle", "listeningHistoryEmptyDetail", "pulseMinutes", "pulseMinuteShort", "pulsePlays", "pulseStreak", "pulseCompletion", "pulseTopArtists", "pulseWeek", "pulsePeakHour", "pulseEmpty", "listeningHistory", "listeningHistorySubtitle", "listeningPrompt", "voiceSearchUnsupported", "musicFiltersComingSoon", "recentSearches", "actions", "removeFromFavorites", "addToFavorites", "playNext", "addToQueue", "addToPlaylist", "alreadyOffline", "download", "openArtist", "openAlbum", "deleteDownload", "share", "shareSong", "removeFromRecentSearches", "songOptions", "goToPlayer", "saveOffline", "favorite", "downloaded", "remove", "youMightAlsoLike", "topResult", "currentlyPlaying", "artistLabel", "playNow", "biography", "newUpdate", "updateDescription", "whatsNew", "update", "updateRetry", "updateDownloading", "updatePreparing", "updateInstalling", "updateReadyToInstall", "updateFailed", "updateAllowInstalls", "updateLinkUnavailable", "cannotOpenDownload", "externalLinkUnavailable", "cannotOpenExternalLink", "continuousRadio", "continuousRadioSubtitle", "artistsLabelPlural", "albumMood", "openLyricsAnalysis", "closeLyrics", "lyricsDuet", "lyricsCinema", "lyricsPage", "lyricsRomanization", "lyricsCompact", "changeLyrics", "automaticLyrics", "selectVerses", "copyVerses", "shareVerses", "lyricsVersions", "lyricsSections", "lyricsSectionIntro", "lyricsSectionVerse", "lyricsSectionPreChorus", "lyricsSectionChorus", "lyricsSectionBridge", "lyricsSectionInstrumental", "lyricsSectionOutro", "automaticTranslation", "automaticTranslationSubtitle", "atmosphere", "themes", "chorusDetected", "goToChorus", "close", "complete", "delete", "newPlaylist", "playlistName", "create", "cancel", "newPlaylistName", "createNewPlaylist", "createAndAdd", "downloadPlaylist", "playAll", "playingFrom", "closePlayer", "options", "showLyrics", "shuffle", "previous", "next", "repeat", "persistentQueue", "continueListening", "favoritesPlain", "offline", "more", "mix", "mixForYou", "genres", "smartMusicProfile", "flow", "pictureInPicture", "discoveryFlow", "shareDiagnostics", "albumUnavailable", "albumTracksUnavailable", "albumTracksLoadFailed", "showLess", "showMore", "playing", "artistProfileUnavailable", "popularTracks", "showAll", "versionLabel", "generalImprovements", "historyLabel", "undoRemoval", "lyricsAnalysis", "linesLabel", "wordsLabel", "localAnalysis", "open", "newRelease", "newReleaseSubtitle", "saved", "save", "noOfflineDownloads", "createFirstPlaylist", "createFirstPlaylistSubtitle", "downloadTrackHint", "savedTracks", "favoritesEmpty", "playlistEmpty", "showPersonalListening", "showRecentReleases", "showRecommendedAlbums", "showDiscoveredArtists", "showChartsCountry", "partialDownloadResume", "lyricsAnalysisSection", "lyricsAnalysisCompact", "lyricsAnalysisCompactSubtitle", "createDataBackup", "createDataBackupSubtitle", "updateAvailable", "updates", "checkingLatestVersion", "latestVersionReady", "latestInstalled", "checkNewVersions", "releasePageReady", "installedVersion", "openPlayer", "searchSongsArtists", "songsPlain", "shareVia", "emptySearchPrompt", "cancelDownload", "readAll", "singlesAndEps", "tapHeartToAdd", "all", "automaticResume", "simultaneousDownloads", "simultaneousDownloadsSubtitle", "backupRestoreSection", "restoreBackup", "restoreBackupSubtitle", "playbackResilienceSection", "exportSafeDiagnostics", "generateResolverTrace", "safeDiagnosticsSubtitle", "check", "checking", "dragToReorder", "homeInterfaceSection", "compactHome", "compactHomeSubtitle", "yourOrbitSetting", "voicesSetting", "voicesSettingSubtitle", "newReleasesSetting", "albumsForYouSetting", "trendingArtists", "top50Charts", "mobilePlayerSection", "advancedGestures", "advancedGesturesSubtitle", "pureBlack", "pureBlackSubtitle", "hapticFeedback", "hapticFeedbackSubtitle", "doubleTapSeek", "doubleTapSeekSubtitle", "longPress", "longPressSubtitle", "downloadEngineSection", "wifiOnly", "wifiOnlySubtitle", "chargingOnly", "chargingOnlySubtitle", "resumeDownload", "pauseDownload", "signedApkReady", "downloadsInProgress", "downloadInProgress", "newAlbums", "newSingles", "newAlbum", "downloadsFolder", "offlineDownloadsPlain", "personalPlaylists", "searchingYouTubeMusic", "searchingLyrics", "pause", "newSingle", "albumsPlain", "albumPlain", "singlePlain", "playlistsPlain", "profileActive", "profileLearning", "newBadge", "brightness", "timer", "normalizationShort", "coverAndTags", "madeWithBy", "activeIndicator", "batteryUnrestricted", "batteryUnrestrictedSubtitle", "batteryUnrestrictedActive", "levyraSelection", "releasedToday", "justReleased", "chartTrending", "selectedForYou", "availableToday", "releasedThisWeek", "popularInCharts", "collectionsTitle", "collectionsSubtitle", "collectionFresh", "collectionLocal", "collectionWorkout", "collectionChill", "collectionFocus", "collectionParty", "collectionRap", "collectionPop", "collectionDiscovery", "collectionUpdatedToday", "collectionEditorial", "collectionCharts", "collectionRepeat", "collectionThrowback", "collectionGems", "downloadQualityPreset", "downloadQualityPresetSubtitle", "downloadPresetAutomatic", "downloadPresetHighQuality", "downloadPresetDataSaver", "downloadFolderOrganization", "downloadFolderOrganizationSubtitle", "downloadFolderArtist", "downloadFolderArtistAlbum", "downloadSpeedLimit", "downloadSpeedLimitSubtitle", "downloadSpeedUnlimited", "downloadEmbedMetadata", "downloadEmbedMetadataSubtitle", "downloadEmbedArtwork", "downloadEmbedArtworkSubtitle", "downloadVerifyFile", "downloadVerifyFileSubtitle", "downloadSkipDuplicates", "downloadSkipDuplicatesSubtitle", "trailTitle", "trailPlays", "trailUnique", "trailLastPlayed", "statPlays", "statArtists", "statTracks", "introHeadline", "introBody", "introFeatureSound", "introFeatureLyrics", "introFeatureOffline", "introStart", "expandPlayer", "collapsePlayer", "lyricsFocus")
+        private val requiredKeys = setOf("autoDownloadFavorites", "autoDownloadFavoritesSubtitle", "welcomeBadge", "welcomeTitle", "languageQuestion", "nameQuestion", "namePlaceholder", "tasteQuestion", "skipAndContinue", "startListening", "settings", "settingsSubtitle", "design", "playback", "preferences", "app", "animations", "animationsSubtitle", "dynamicColor", "dynamicColorSubtitle", "sponsorBlock", "sponsorBlockSubtitle", "skipSilence", "skipSilenceSubtitle", "redoQuestionnaire", "redoQuestionnaireSubtitle", "language", "languageSubtitle", "home", "search", "library", "player", "queue", "lyrics", "related", "song", "video", "nowPlaying", "emptyPlayer", "phoneSpeaker", "connected", "volume", "audioQuality", "done", "queueEmpty", "lyricsUnavailable", "synced", "libraryTitle", "librarySubtitle", "playlists", "newItem", "downloads", "favorites", "recent", "quickPicks", "play", "newReleases", "albumsForYou", "top50Unavailable", "artists", "albumsAndSingles", "songs", "searchPlaceholder", "back", "clear", "voice", "createPlaylistHint", "selectLanguagePrompt", "explore", "exploreTitle", "exploreSubtitle", "exploreMoods", "exploreSamples", "exploreSamplesSubtitle", "exploreSamplesError", "exploreSamplesRetry", "exploreFresh", "exploreNewVideos", "exploreEmpty", "localWaveName", "localWaveEmoji", "localWaveQuery", "exploreNewReleases", "exploreRapDrill", "exploreElectronic", "explorePopGlobal", "exploreRnbSoul", "exploreRockAlt", "exploreLatino", "exploreLofiChill", "exploreJpopAnime", "followArtist", "followingArtist", "releaseRadar", "similarArtists", "similarToFollowed", "theme", "themeSubtitle", "personalOrbitTitle", "personalOrbitSubtitle", "voicesTitle", "voicesSubtitle", "totalComments", "engagement", "audioEngine", "audioEngineSubtitle", "equalizer", "equalizerSubtitle", "preset", "bassBoost", "virtualizer", "crossfade", "djSoft", "replayGain", "tempo", "pitch", "gapless", "restartRequiredTitle", "restartRequiredBody", "restartNow", "later", "audioQualityAuto", "audioQualityHigh", "audioQualityLow", "pulseSectionBand", "pulseTitle", "pulseSubtitle", "followedArtistsTitle", "followedArtistsSubtitle", "listeningHistoryEmptyTitle", "listeningHistoryEmptyDetail", "pulseMinutes", "pulseMinuteShort", "pulsePlays", "pulseStreak", "pulseCompletion", "pulseTopArtists", "pulseWeek", "pulsePeakHour", "pulseEmpty", "listeningHistory", "listeningHistorySubtitle", "listeningPrompt", "voiceSearchUnsupported", "musicFiltersComingSoon", "recentSearches", "actions", "removeFromFavorites", "addToFavorites", "playNext", "addToQueue", "addToPlaylist", "alreadyOffline", "download", "openArtist", "openAlbum", "deleteDownload", "share", "shareSong", "removeFromRecentSearches", "songOptions", "goToPlayer", "saveOffline", "favorite", "downloaded", "remove", "youMightAlsoLike", "topResult", "currentlyPlaying", "artistLabel", "playNow", "biography", "newUpdate", "updateDescription", "whatsNew", "update", "updateRetry", "updateDownloading", "updatePreparing", "updateInstalling", "updateReadyToInstall", "updateFailed", "updateAllowInstalls", "updateLinkUnavailable", "cannotOpenDownload", "externalLinkUnavailable", "cannotOpenExternalLink", "continuousRadio", "continuousRadioSubtitle", "artistsLabelPlural", "albumMood", "openLyricsAnalysis", "closeLyrics", "lyricsDuet", "lyricsCinema", "lyricsPage", "lyricsRomanization", "lyricsCompact", "changeLyrics", "automaticLyrics", "selectVerses", "copyVerses", "shareVerses", "lyricsVersions", "lyricsSections", "lyricsSectionIntro", "lyricsSectionVerse", "lyricsSectionPreChorus", "lyricsSectionChorus", "lyricsSectionBridge", "lyricsSectionInstrumental", "lyricsSectionOutro", "automaticTranslation", "automaticTranslationSubtitle", "atmosphere", "themes", "chorusDetected", "goToChorus", "close", "complete", "delete", "newPlaylist", "playlistName", "create", "cancel", "newPlaylistName", "createNewPlaylist", "createAndAdd", "downloadPlaylist", "playAll", "playingFrom", "closePlayer", "options", "showLyrics", "shuffle", "previous", "next", "repeat", "persistentQueue", "continueListening", "favoritesPlain", "offline", "more", "mix", "mixForYou", "genres", "smartMusicProfile", "flow", "pictureInPicture", "discoveryFlow", "shareDiagnostics", "albumUnavailable", "albumTracksUnavailable", "albumTracksLoadFailed", "showLess", "showMore", "playing", "artistProfileUnavailable", "popularTracks", "showAll", "versionLabel", "generalImprovements", "historyLabel", "undoRemoval", "lyricsAnalysis", "linesLabel", "wordsLabel", "localAnalysis", "open", "newRelease", "newReleaseSubtitle", "saved", "save", "noOfflineDownloads", "createFirstPlaylist", "createFirstPlaylistSubtitle", "downloadTrackHint", "savedTracks", "favoritesEmpty", "playlistEmpty", "showPersonalListening", "showRecentReleases", "showRecommendedAlbums", "showDiscoveredArtists", "showChartsCountry", "partialDownloadResume", "lyricsAnalysisSection", "lyricsAnalysisCompact", "lyricsAnalysisCompactSubtitle", "createDataBackup", "createDataBackupSubtitle", "updateAvailable", "updates", "checkingLatestVersion", "latestVersionReady", "latestInstalled", "checkNewVersions", "releasePageReady", "installedVersion", "openPlayer", "searchSongsArtists", "songsPlain", "shareVia", "emptySearchPrompt", "cancelDownload", "readAll", "singlesAndEps", "tapHeartToAdd", "all", "automaticResume", "simultaneousDownloads", "simultaneousDownloadsSubtitle", "backupRestoreSection", "restoreBackup", "restoreBackupSubtitle", "playbackResilienceSection", "exportSafeDiagnostics", "generateResolverTrace", "safeDiagnosticsSubtitle", "check", "checking", "dragToReorder", "homeInterfaceSection", "compactHome", "compactHomeSubtitle", "yourOrbitSetting", "voicesSetting", "voicesSettingSubtitle", "newReleasesSetting", "albumsForYouSetting", "trendingArtists", "top50Charts", "mobilePlayerSection", "advancedGestures", "advancedGesturesSubtitle", "pureBlack", "pureBlackSubtitle", "hapticFeedback", "hapticFeedbackSubtitle", "doubleTapSeek", "doubleTapSeekSubtitle", "longPress", "longPressSubtitle", "downloadEngineSection", "wifiOnly", "wifiOnlySubtitle", "chargingOnly", "chargingOnlySubtitle", "resumeDownload", "pauseDownload", "signedApkReady", "downloadsInProgress", "downloadInProgress", "newAlbums", "newSingles", "newAlbum", "downloadsFolder", "offlineDownloadsPlain", "personalPlaylists", "searchingYouTubeMusic", "searchingLyrics", "pause", "newSingle", "albumsPlain", "albumPlain", "singlePlain", "playlistsPlain", "profileActive", "profileLearning", "newBadge", "brightness", "timer", "normalizationShort", "coverAndTags", "madeWithBy", "activeIndicator", "batteryUnrestricted", "batteryUnrestrictedSubtitle", "batteryUnrestrictedActive", "levyraSelection", "releasedToday", "justReleased", "chartTrending", "selectedForYou", "availableToday", "releasedThisWeek", "popularInCharts", "collectionsTitle", "collectionsSubtitle", "collectionFresh", "collectionLocal", "collectionWorkout", "collectionChill", "collectionFocus", "collectionParty", "collectionRap", "collectionPop", "collectionDiscovery", "collectionUpdatedToday", "collectionEditorial", "collectionCharts", "collectionRepeat", "collectionThrowback", "collectionGems", "downloadQualityPreset", "downloadQualityPresetSubtitle", "downloadPresetAutomatic", "downloadPresetHighQuality", "downloadPresetDataSaver", "downloadFolderOrganization", "downloadFolderOrganizationSubtitle", "downloadFolderArtist", "downloadFolderArtistAlbum", "downloadSpeedLimit", "downloadSpeedLimitSubtitle", "downloadSpeedUnlimited", "downloadEmbedMetadata", "downloadEmbedMetadataSubtitle", "downloadEmbedArtwork", "downloadEmbedArtworkSubtitle", "downloadVerifyFile", "downloadVerifyFileSubtitle", "downloadSkipDuplicates", "downloadSkipDuplicatesSubtitle", "trailTitle", "trailPlays", "trailUnique", "trailLastPlayed", "statPlays", "statArtists", "statTracks", "introHeadline", "introBody", "introFeatureSound", "introFeatureLyrics", "introFeatureOffline", "introStart", "expandPlayer", "collapsePlayer", "lyricsFocus")
         private val motionArtworkKeys = setOf("motionArtwork", "motionArtworkSubtitle")
         private val exploreSectionKeys = setOf("exploreMoodSection", "exploreAfrobeats")
         private val freshCurrentsKeys = setOf("freshScopeWorld", "freshMomentTitle")
@@ -2623,6 +2625,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Temporary speed while you hold",
             "downloadEngineSection" to "DOWNLOAD ENGINE 3.0",
             "wifiOnly" to "Wi-Fi only",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager starts downloads only on an unmetered network",
             "chargingOnly" to "Only while charging",
             "chargingOnlySubtitle" to "Reduces battery use and temperature during long downloads",
@@ -3022,6 +3026,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Velocità temporanea finché tieni premuto",
             "downloadEngineSection" to "MOTORE DOWNLOAD 3.0",
             "wifiOnly" to "Solo Wi-Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager avvia i download solo su reti non a consumo",
             "chargingOnly" to "Solo durante la ricarica",
             "chargingOnlySubtitle" to "Riduce consumo e temperatura durante i download lunghi",
@@ -3421,6 +3427,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Velocidad temporal mientras mantienes pulsado",
             "downloadEngineSection" to "MOTOR DE DESCARGAS 3.0",
             "wifiOnly" to "Solo Wi-Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager inicia las descargas solo en una red sin límite de datos",
             "chargingOnly" to "Solo durante la carga",
             "chargingOnlySubtitle" to "Reduce el consumo y la temperatura en descargas largas",
@@ -3820,6 +3828,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Vitesse temporaire tant que vous maintenez l'appui",
             "downloadEngineSection" to "MOTEUR DE TÉLÉCHARGEMENT 3.0",
             "wifiOnly" to "Wi-Fi uniquement",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager lance les téléchargements uniquement sur un réseau non limité",
             "chargingOnly" to "Uniquement pendant la charge",
             "chargingOnlySubtitle" to "Réduit la consommation et la température pendant les longs téléchargements",
@@ -4219,6 +4229,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Temporäres Tempo, solange du gedrückt hältst",
             "downloadEngineSection" to "DOWNLOAD-ENGINE 3.0",
             "wifiOnly" to "Nur WLAN",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager startet Downloads nur in einem nicht getakteten Netzwerk",
             "chargingOnly" to "Nur beim Laden",
             "chargingOnlySubtitle" to "Reduziert Verbrauch und Temperatur bei langen Downloads",
@@ -4618,6 +4630,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Velocidade temporária enquanto manténs premido",
             "downloadEngineSection" to "MOTOR DE TRANSFERÊNCIAS 3.0",
             "wifiOnly" to "Apenas Wi-Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "O WorkManager inicia transferências apenas numa rede sem limite de dados",
             "chargingOnly" to "Apenas durante o carregamento",
             "chargingOnlySubtitle" to "Reduz o consumo e a temperatura durante transferências longas",
@@ -5017,6 +5031,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Tijdelijke snelheid zolang je ingedrukt houdt",
             "downloadEngineSection" to "DOWNLOADENGINE 3.0",
             "wifiOnly" to "Alleen wifi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager start downloads alleen op een netwerk zonder datalimiet",
             "chargingOnly" to "Alleen tijdens opladen",
             "chargingOnlySubtitle" to "Vermindert verbruik en temperatuur tijdens lange downloads",
@@ -5416,6 +5432,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Tymczasowa prędkość podczas przytrzymywania",
             "downloadEngineSection" to "SILNIK POBIERANIA 3.0",
             "wifiOnly" to "Tylko Wi‑Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager uruchamia pobieranie wyłącznie w sieci bez limitu danych",
             "chargingOnly" to "Tylko podczas ładowania",
             "chargingOnlySubtitle" to "Zmniejsza zużycie baterii i temperaturę podczas długich pobrań",
@@ -5815,6 +5833,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Viteză temporară cât timp ții apăsat",
             "downloadEngineSection" to "MOTOR DE DESCĂRCARE 3.0",
             "wifiOnly" to "Numai prin Wi‑Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager pornește descărcările numai într-o rețea fără tarifare",
             "chargingOnly" to "Numai în timpul încărcării",
             "chargingOnlySubtitle" to "Reduce consumul bateriei și temperatura în timpul descărcărilor lungi",
@@ -6214,6 +6234,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Προσωρινή ταχύτητα όσο κρατάτε πατημένο",
             "downloadEngineSection" to "ΜΗΧΑΝΗ ΛΗΨΕΩΝ 3.0",
             "wifiOnly" to "Μόνο μέσω Wi‑Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "Το WorkManager ξεκινά λήψεις μόνο σε δίκτυο χωρίς ογκοχρέωση",
             "chargingOnly" to "Μόνο κατά τη φόρτιση",
             "chargingOnlySubtitle" to "Μειώνει την κατανάλωση μπαταρίας και τη θερμοκρασία στις μεγάλες λήψεις",
@@ -6613,6 +6635,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Tillfällig hastighet medan du håller ned",
             "downloadEngineSection" to "HÄMTNINGSMOTOR 3.0",
             "wifiOnly" to "Endast Wi‑Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager startar bara hämtningar på nätverk utan databegränsning",
             "chargingOnly" to "Endast under laddning",
             "chargingOnlySubtitle" to "Minskar batteriförbrukning och värme vid långa hämtningar",
@@ -7012,6 +7036,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Midlertidig hastighed, mens du holder nede",
             "downloadEngineSection" to "DOWNLOADMOTOR 3.0",
             "wifiOnly" to "Kun Wi‑Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager starter kun downloads på et netværk uden databegrænsning",
             "chargingOnly" to "Kun under opladning",
             "chargingOnlySubtitle" to "Reducerer batteriforbrug og varme ved lange downloads",
@@ -7411,6 +7437,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Dočasná rychlost po dobu přidržení",
             "downloadEngineSection" to "MODUL STAHOVÁNÍ 3.0",
             "wifiOnly" to "Pouze přes Wi‑Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager spustí stahování pouze v síti bez omezení dat",
             "chargingOnly" to "Pouze při nabíjení",
             "chargingOnlySubtitle" to "Snižuje spotřebu baterie a zahřívání při dlouhém stahování",
@@ -7810,6 +7838,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Тимчасова швидкість, поки ви утримуєте",
             "downloadEngineSection" to "МОДУЛЬ ЗАВАНТАЖЕНЬ 3.0",
             "wifiOnly" to "Лише через Wi‑Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager починає завантаження лише в мережі без тарифікації",
             "chargingOnly" to "Лише під час заряджання",
             "chargingOnlySubtitle" to "Зменшує витрати заряду й нагрівання під час тривалих завантажень",
@@ -8209,6 +8239,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Временная скорость, пока вы удерживаете",
             "downloadEngineSection" to "МОДУЛЬ ЗАГРУЗОК 3.0",
             "wifiOnly" to "Только по Wi‑Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager запускает загрузки только в сети без тарификации",
             "chargingOnly" to "Только во время зарядки",
             "chargingOnlySubtitle" to "Снижает расход заряда и нагрев при длительных загрузках",
@@ -8608,6 +8640,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "Basılı tuttuğunuz sürece geçici hız",
             "downloadEngineSection" to "İNDİRME MOTORU 3.0",
             "wifiOnly" to "Yalnızca Wi‑Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager indirmeleri yalnızca ölçülmeyen bir ağda başlatır",
             "chargingOnly" to "Yalnızca şarj olurken",
             "chargingOnlySubtitle" to "Uzun indirmelerde pil kullanımını ve sıcaklığı azaltır",
@@ -9007,6 +9041,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "سرعة مؤقتة ما دمت ضاغطًا",
             "downloadEngineSection" to "محرك التنزيل 3.0",
             "wifiOnly" to "Wi‑Fi فقط",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "يبدأ WorkManager التنزيلات فقط عبر شبكة غير محدودة",
             "chargingOnly" to "أثناء الشحن فقط",
             "chargingOnlySubtitle" to "يقلل استهلاك البطارية والحرارة أثناء التنزيلات الطويلة",
@@ -9406,6 +9442,8 @@ class LevyraStrings private constructor(
             "longPressSubtitle" to "按住时临时调整播放速度",
             "downloadEngineSection" to "下载引擎 3.0",
             "wifiOnly" to "仅限 Wi‑Fi",
+            "autoDownloadFavorites" to "Auto-download liked songs",
+            "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
             "wifiOnlySubtitle" to "WorkManager 仅在非计费网络上启动下载",
             "chargingOnly" to "仅在充电时",
             "chargingOnlySubtitle" to "减少长时间下载时的电量消耗和发热",

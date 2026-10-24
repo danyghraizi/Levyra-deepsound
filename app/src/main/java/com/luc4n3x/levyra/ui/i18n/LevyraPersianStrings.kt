@@ -336,6 +336,8 @@ internal fun faLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "سرعت موقت تا وقتی نگه می‌دارید",
     "downloadEngineSection" to "موتور دانلود ۳.۰",
     "wifiOnly" to "فقط Wi-Fi",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager دانلودها را فقط روی شبکهٔ بدون محدودیت حجم آغاز می‌کند",
     "chargingOnly" to "فقط هنگام شارژ",
     "chargingOnlySubtitle" to "مصرف باتری و گرما را در دانلودهای طولانی کاهش می‌دهد",

@@ -276,6 +276,7 @@ class LevyraPreferences internal constructor(private val store: LevyraPreference
             mutable[KEY_DOWNLOAD_EMBED_ARTWORK] = normalizedDownloads.embedArtwork
             mutable[KEY_DOWNLOAD_VERIFY_FILE] = normalizedDownloads.verifyFile
             mutable[KEY_DOWNLOAD_SKIP_EXISTING] = normalizedDownloads.skipExisting
+            mutable[KEY_DOWNLOAD_AUTO_FAVORITE] = normalizedDownloads.autoDownloadFavorites
             writeSmartOfflineSettings(mutable, normalizedSmartOffline)
             mutable[KEY_BACKUP_ENABLED] = normalizedBackup.enabled
             mutable[KEY_BACKUP_FREQUENCY] = normalizedBackup.frequency.name
@@ -486,6 +487,7 @@ class LevyraPreferences internal constructor(private val store: LevyraPreference
             it[KEY_DOWNLOAD_EMBED_ARTWORK] = normalized.embedArtwork
             it[KEY_DOWNLOAD_VERIFY_FILE] = normalized.verifyFile
             it[KEY_DOWNLOAD_SKIP_EXISTING] = normalized.skipExisting
+            it[KEY_DOWNLOAD_AUTO_FAVORITE] = normalized.autoDownloadFavorites
         }
     }
 
@@ -932,7 +934,8 @@ class LevyraPreferences internal constructor(private val store: LevyraPreference
         embedMetadata = preferences[KEY_DOWNLOAD_EMBED_METADATA] ?: true,
         embedArtwork = preferences[KEY_DOWNLOAD_EMBED_ARTWORK] ?: true,
         verifyFile = preferences[KEY_DOWNLOAD_VERIFY_FILE] ?: true,
-        skipExisting = preferences[KEY_DOWNLOAD_SKIP_EXISTING] ?: true
+        skipExisting = preferences[KEY_DOWNLOAD_SKIP_EXISTING] ?: true,
+        autoDownloadFavorites = preferences[KEY_DOWNLOAD_AUTO_FAVORITE] ?: true
     ).normalized()
 
     private fun smartOfflineSettingsFrom(preferences: Preferences): LevyraSmartOfflineSettings =
@@ -1421,6 +1424,7 @@ class LevyraPreferences internal constructor(private val store: LevyraPreference
         val KEY_DOWNLOAD_EMBED_ARTWORK = booleanPreferencesKey("download_embed_artwork")
         val KEY_DOWNLOAD_VERIFY_FILE = booleanPreferencesKey("download_verify_file")
         val KEY_DOWNLOAD_SKIP_EXISTING = booleanPreferencesKey("download_skip_existing")
+        val KEY_DOWNLOAD_AUTO_FAVORITE = booleanPreferencesKey("download_auto_favorite")
         val KEY_SMART_OFFLINE_ENABLED = booleanPreferencesKey("smart_offline_enabled")
         val KEY_SMART_OFFLINE_STORAGE_LIMIT = longPreferencesKey("smart_offline_storage_limit_bytes")
         val KEY_SMART_OFFLINE_WIFI_ONLY = booleanPreferencesKey("smart_offline_wifi_only")

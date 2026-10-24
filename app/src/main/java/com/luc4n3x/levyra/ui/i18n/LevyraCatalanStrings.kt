@@ -336,6 +336,8 @@ internal fun caLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Velocitat temporal mentre mantens premut",
     "downloadEngineSection" to "MOTOR DE BAIXADES 3.0",
     "wifiOnly" to "Només amb Wi-Fi",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager només inicia baixades en una xarxa sense límit de dades",
     "chargingOnly" to "Només mentre es carrega",
     "chargingOnlySubtitle" to "Redueix el consum de bateria i la temperatura en baixades llargues",

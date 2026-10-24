@@ -280,7 +280,8 @@ data class LevyraDownloadSettings(
     val embedMetadata: Boolean = true,
     val embedArtwork: Boolean = true,
     val verifyFile: Boolean = true,
-    val skipExisting: Boolean = true
+    val skipExisting: Boolean = true,
+    val autoDownloadFavorites: Boolean = true
 ) {
     fun normalized(): LevyraDownloadSettings = copy(
         maxConcurrentDownloads = maxConcurrentDownloads.coerceIn(1, 4),

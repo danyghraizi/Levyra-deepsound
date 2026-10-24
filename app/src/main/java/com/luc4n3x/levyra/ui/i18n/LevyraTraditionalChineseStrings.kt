@@ -336,6 +336,8 @@ internal fun zhHantLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "按住時暫時變更速度",
     "downloadEngineSection" to "下載引擎 3.0",
     "wifiOnly" to "僅限 Wi-Fi",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager 只在不計量的網路上開始下載",
     "chargingOnly" to "僅在充電時",
     "chargingOnlySubtitle" to "長時間下載時減少耗電與發熱",

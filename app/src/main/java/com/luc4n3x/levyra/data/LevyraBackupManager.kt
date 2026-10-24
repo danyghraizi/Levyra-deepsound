@@ -1188,6 +1188,7 @@ class LevyraBackupManager(private val context: Context) {
         .put("resumable", value.resumable)
         .put("maxConcurrentDownloads", value.maxConcurrentDownloads)
         .put("destinationTreeUri", value.destinationTreeUri)
+        .put("autoDownloadFavorites", value.autoDownloadFavorites)
 
     private fun parseDownloadSettings(json: JSONObject?): LevyraDownloadSettings {
         if (json == null) return LevyraDownloadSettings()
@@ -1196,7 +1197,8 @@ class LevyraBackupManager(private val context: Context) {
             chargingOnly = json.optBoolean("chargingOnly"),
             resumable = json.optBoolean("resumable", true),
             maxConcurrentDownloads = json.optInt("maxConcurrentDownloads", 2),
-            destinationTreeUri = json.optString("destinationTreeUri")
+            destinationTreeUri = json.optString("destinationTreeUri"),
+            autoDownloadFavorites = json.optBoolean("autoDownloadFavorites", true)
         ).normalized()
     }
 

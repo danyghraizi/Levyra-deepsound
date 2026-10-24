@@ -21709,6 +21709,15 @@ private fun SettingsOverlay(
                             }
                             item {
                                 SettingsToggle(
+                                    icon = Icons.Rounded.Favorite,
+                                    title = strings.autoDownloadFavorites,
+                                    subtitle = strings.autoDownloadFavoritesSubtitle,
+                                    checked = downloadSettings.autoDownloadFavorites,
+                                    onCheckedChange = { onDownloadSettings(downloadSettings.copy(autoDownloadFavorites = it)) }
+                                )
+                            }
+                            item {
+                                SettingsToggle(
                                     icon = Icons.Rounded.Bolt,
                                     title = strings.chargingOnly,
                                     subtitle = strings.chargingOnlySubtitle,

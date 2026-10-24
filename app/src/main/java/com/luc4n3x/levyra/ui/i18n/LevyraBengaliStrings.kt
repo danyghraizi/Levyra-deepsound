@@ -336,6 +336,8 @@ internal fun bnLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "চেপে ধরে রাখলে অস্থায়ী গতি",
     "downloadEngineSection" to "ডাউনলোড ইঞ্জিন ৩.০",
     "wifiOnly" to "শুধু Wi-Fi",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager শুধু সীমাহীন নেটওয়ার্কে ডাউনলোড শুরু করে",
     "chargingOnly" to "শুধু চার্জ হওয়ার সময়",
     "chargingOnlySubtitle" to "দীর্ঘ ডাউনলোডে ব্যাটারি খরচ ও তাপ কমায়",

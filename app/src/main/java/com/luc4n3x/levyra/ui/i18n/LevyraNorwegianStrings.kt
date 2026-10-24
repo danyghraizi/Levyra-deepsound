@@ -336,6 +336,8 @@ internal fun nbLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Midlertidig hastighet mens du holder inne",
     "downloadEngineSection" to "NEDLASTINGSMOTOR 3.0",
     "wifiOnly" to "Bare Wi-Fi",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager starter nedlastinger bare på nettverk uten datamåling",
     "chargingOnly" to "Bare under lading",
     "chargingOnlySubtitle" to "Reduserer batteribruk og varme ved lange nedlastinger",

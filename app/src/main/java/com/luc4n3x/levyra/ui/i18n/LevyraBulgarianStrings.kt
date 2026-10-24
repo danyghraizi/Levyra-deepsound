@@ -336,6 +336,8 @@ internal fun bgLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Временна скорост, докато задържаш",
     "downloadEngineSection" to "ДВИГАТЕЛ ЗА ИЗТЕГЛЯНЕ 3.0",
     "wifiOnly" to "Само през Wi-Fi",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager стартира изтегляния само в нетаксувана мрежа",
     "chargingOnly" to "Само при зареждане",
     "chargingOnlySubtitle" to "Намалява разхода на батерия и загряването при дълги изтегляния",

@@ -336,6 +336,8 @@ internal fun kkLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Ұстап тұрғанда уақытша жылдамдық",
     "downloadEngineSection" to "ЖҮКТЕУ ҚОЗҒАЛТҚЫШЫ 3.0",
     "wifiOnly" to "Тек Wi-Fi",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager жүктеулерді тек трафигі шектелмеген желіде бастайды",
     "chargingOnly" to "Тек зарядталғанда",
     "chargingOnlySubtitle" to "Ұзақ жүктеулер кезінде батарея шығыны мен қызуды азайтады",

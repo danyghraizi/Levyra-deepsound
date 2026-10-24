@@ -336,6 +336,8 @@ internal fun heLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "מהירות זמנית כל עוד ממשיכים ללחוץ",
     "downloadEngineSection" to "מנוע הורדות 3.0",
     "wifiOnly" to "Wi-Fi בלבד",
+    "autoDownloadFavorites" to "Auto-download liked songs",
+    "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager מתחיל הורדות רק ברשת שאינה מוגבלת",
     "chargingOnly" to "רק בזמן טעינה",
     "chargingOnlySubtitle" to "מפחית שימוש בסוללה והתחממות בהורדות ארוכות",
