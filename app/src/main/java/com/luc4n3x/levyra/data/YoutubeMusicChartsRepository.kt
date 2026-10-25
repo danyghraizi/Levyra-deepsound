@@ -33,11 +33,41 @@ internal class YoutubeMusicChartsRepository(context: Context) {
     private val playlistStore = appContext.getSharedPreferences(PLAYLIST_STORE_NAME, Context.MODE_PRIVATE)
 
     suspend fun topTracks(country: String, limit: Int): List<Track> = withContext(Dispatchers.IO) {
+        if (country.trim().equals("lb", ignoreCase = true)) {
+            val lebanese = lebanonChart(limit)
+            if (lebanese.isNotEmpty()) return@withContext lebanese
+        }
         val request = chartRequest(country, limit)
         val cache = readPlaylistCache(request.country, System.currentTimeMillis())
         val candidates = resolvePlaylistCandidates(request, cache)
         val tracks = loadFirstAvailablePlaylist(candidates, request)
         if (tracks.isNotEmpty()) tracks else refreshFreshCache(request, cache)
+    }
+
+    /**
+     * YouTube Music has no official Lebanon chart, so build one from the Lebanese/Arabic
+     * repertoire that is actually popular there.
+     */
+    internal suspend fun lebanonChart(limit: Int): List<Track> {
+        val queries = listOf(
+            "أغاني لبنانية 2026",
+            "أفضل الأغاني العربية 2026",
+            "نجوم الغناء اللبناني",
+            "وائل كفوري",
+            "نانسي عجرم",
+            "إليسا",
+            "راغب علامة",
+            "ماجد المهندس"
+        )
+        val seen = LinkedHashMap<String, Track>()
+        for (query in queries) {
+            if (seen.size >= limit) break
+            val results = runCatching { musicRepository.search(query, 12) }.getOrDefault(emptyList())
+            results.forEach { track ->
+                if (track.id.isNotBlank()) seen.putIfAbsent(track.id, track)
+            }
+        }
+        return seen.values.take(limit)
     }
 
     private fun chartRequest(country: String, limit: Int): ChartRequest {

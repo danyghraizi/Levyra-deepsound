@@ -45,7 +45,6 @@ object LevyraContentLocales {
             "vi" -> listOf("Sơn Tùng M-TP", "Mỹ Tâm", "Đen Vâu", "HIEUTHUHAI", "nhạc Việt 2026", "rap Việt", "nhạc lái xe ban đêm", "nhạc tập luyện")
             "th" -> listOf("พีพี กฤษฏ์", "บิวกิ้น", "Tilly Birds", "Three Man Down", "เพลงไทย 2026", "แรปไทย", "เพลงขับรถกลางคืน", "เพลงออกกำลังกาย")
             "fil" -> listOf("Cup of Joe", "BINI", "SB19", "Ben&Ben", "OPM hits 2026", "Pinoy rap", "kantang pang-night drive", "musikang pang-workout")
-            "he" -> listOf("עומר אדם", "נועה קירל", "אושר כהן", "עדן חסון", "להיטים ישראליים 2026", "היפ הופ ישראלי", "מוזיקה לנסיעה בלילה", "מוזיקה לאימון")
             "zh-Hant" -> listOf("周杰倫", "鄧紫棋", "告五人", "蔡依林", "2026 華語熱門歌曲", "華語嘻哈", "夜間駕駛歌單", "健身音樂")
             "hu" -> listOf("Azahriah", "DESH", "Dzsúdló", "Krúbi", "magyar slágerek 2026", "magyar rap", "éjszakai vezetés", "edzés zene")
             "bg" -> listOf("DARA", "Криско", "Графа", "Михаела Филева", "български хитове 2026", "български рап", "нощно шофиране", "музика за тренировка")
@@ -90,7 +89,6 @@ object LevyraContentLocales {
             "vi" -> listOf("Sơn Tùng M-TP", "Mỹ Tâm", "Đen Vâu", "HIEUTHUHAI", "Hoàng Thùy Linh", "MONO", "Bích Phương", "tlinh", "Vũ.", "SOOBIN")
             "th" -> listOf("พีพี กฤษฏ์", "บิวกิ้น", "Tilly Birds", "Three Man Down", "4EVE", "MILLI", "Jeff Satur", "NONT TANONT", "Ink Waruntorn", "Slot Machine")
             "fil" -> listOf("Cup of Joe", "BINI", "SB19", "Ben&Ben", "Arthur Nery", "Dionela", "TJ Monterde", "December Avenue", "fitterkarma", "Earl Agustin")
-            "he" -> listOf("עומר אדם", "נועה קירל", "אושר כהן", "עדן חסון", "נס וסטילה", "טונה", "רביב כנר", "ישי ריבו", "אנה זק", "פאר טסי")
             "zh-Hant" -> listOf("周杰倫", "鄧紫棋", "告五人", "蔡依林", "陳奕迅", "徐佳瑩", "韋禮安", "田馥甄", "盧廣仲", "ØZI")
             "hu" -> listOf("Azahriah", "DESH", "Dzsúdló", "Krúbi", "Beton.Hofi", "Pogány Induló", "Manuel", "T. Danny", "Carson Coma", "VALMAR")
             "bg" -> listOf("DARA", "Криско", "Графа", "Михаела Филева", "Молец", "Любо Киров", "Tino", "FYRE", "V:RGO", "Миро")
@@ -146,7 +144,6 @@ object LevyraContentLocales {
             "vi" -> "Khám phá nghệ sĩ"
             "th" -> "สำรวจศิลปิน"
             "fil" -> "Tuklasin ang mga artist"
-            "he" -> "גילוי אמנים"
             "zh-Hant" -> "探索藝人"
             "hu" -> "Előadók felfedezése"
             "bg" -> "Открий изпълнители"
@@ -191,7 +188,6 @@ object LevyraContentLocales {
             "vi" -> "Gợi ý"
             "th" -> "คำแนะนำ"
             "fil" -> "Mga mungkahi"
-            "he" -> "הצעות"
             "zh-Hant" -> "建議"
             "hu" -> "Javaslatok"
             "bg" -> "Предложения"
@@ -671,21 +667,6 @@ object LevyraContentLocales {
                 pop = "P-pop at OPM pop 2026",
                 party = "mga kantang Pinoy para sa party 2026",
                 sad = "mga malungkot na kantang OPM"
-            )
-            "he" -> compact(
-                languageCode = "he",
-                hl = "he",
-                gl = "IL",
-                chartRegionId = "il",
-                chartCountry = "il",
-                quick = "בחירות מהירות",
-                local = "ישראל במסלול שלך",
-                energy = "אנרגיה מיידית",
-                localMusic = "להיטים ישראליים חדשים 2026",
-                rap = "ראפ והיפ הופ ישראלי 2026",
-                pop = "פופ ישראלי 2026",
-                party = "מוזיקה ישראלית למסיבה 2026",
-                sad = "שירים ישראליים עצובים"
             )
             "zh-Hant" -> compact(
                 languageCode = "zh-Hant",

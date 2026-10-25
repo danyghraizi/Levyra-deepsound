@@ -171,6 +171,7 @@ internal fun MiniPlayerStudioOverlay(
     val previewModel = MiniPlayerModel(
         track = previewTrack,
         isPlaying = if (track == null) true else isPlaying,
+        favorite = false,
         isResolving = false,
         progress = if (track == null) 0.42f else progress,
         bufferedProgress = 0f,

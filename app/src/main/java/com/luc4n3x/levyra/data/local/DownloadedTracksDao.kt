@@ -12,6 +12,9 @@ interface DownloadedTracksDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(download: DownloadEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(downloads: List<DownloadEntity>): List<Long>
+
     @Query("SELECT * FROM downloaded_tracks ORDER BY savedAt DESC")
     fun observeAll(): Flow<List<DownloadEntity>>
 
@@ -36,6 +39,12 @@ interface DownloadedTracksDao {
 
     @Query("SELECT * FROM downloaded_tracks WHERE trackId = :trackId ORDER BY savedAt DESC LIMIT 1")
     suspend fun byTrackId(trackId: String): DownloadEntity?
+
+    @Query(
+        "SELECT * FROM downloaded_tracks WHERE lower(title) = lower(:title) " +
+            "ORDER BY savedAt DESC LIMIT 20"
+    )
+    suspend fun byTitle(title: String): List<DownloadEntity>
 
     @Query("SELECT * FROM downloaded_tracks WHERE id = :id LIMIT 1")
     suspend fun byId(id: Long): DownloadEntity?

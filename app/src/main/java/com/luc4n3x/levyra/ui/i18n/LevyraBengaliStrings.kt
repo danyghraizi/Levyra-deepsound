@@ -336,6 +336,8 @@ internal fun bnLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "চেপে ধরে রাখলে অস্থায়ী গতি",
     "downloadEngineSection" to "ডাউনলোড ইঞ্জিন ৩.০",
     "wifiOnly" to "শুধু Wi-Fi",
+    "stopOnTaskRemoval" to "Stop playback when closing the app",
+    "stopOnTaskRemovalSubtitle" to "Pause and stop the player when Levyra is swiped away from recents",
     "autoDownloadFavorites" to "Auto-download liked songs",
     "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager শুধু সীমাহীন নেটওয়ার্কে ডাউনলোড শুরু করে",

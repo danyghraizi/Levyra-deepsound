@@ -2560,7 +2560,6 @@ open class YoutubeMusicRepository(private val context: Context? = null) {
             "vi" -> listOf("album Việt mới", "album Việt phổ biến", "album V-pop", "album rap Việt")
             "th" -> listOf("อัลบั้มไทยใหม่", "อัลบั้มไทยยอดนิยม", "อัลบั้มป๊อปไทย", "อัลบั้มแรปไทย")
             "fil" -> listOf("mga bagong OPM album", "mga sikat na album sa Pilipinas", "mga P-pop album", "mga Pinoy rap album")
-            "he" -> listOf("אלבומים ישראליים חדשים", "אלבומים ישראליים פופולריים", "אלבומי פופ ישראלי", "אלבומי ראפ ישראלי")
             else -> listOf("new albums", "popular albums", "pop albums", "rap albums", "indie albums")
         }
     }

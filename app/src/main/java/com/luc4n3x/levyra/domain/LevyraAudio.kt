@@ -146,6 +146,7 @@ data class LevyraAudioSettings(
     val pitch: Float = 1f,
     val gaplessEnabled: Boolean = true,
     val preloadNextTrack: Boolean = true,
+    val stopOnTaskRemoval: Boolean = true,
     val advancedQueuePrefetchTracks: Int = ADVANCED_QUEUE_PREFETCH_OFF,
     val advancedQueuePrefetchOnMobileData: Boolean = false,
     val aaudioOutputEnabled: Boolean = false,

@@ -588,7 +588,6 @@ object LevyraPersonalOrbit {
             "vi" -> listOf("việt nam", "nhạc việt", "tiếng việt", "v-pop")
             "th" -> listOf("ไทย", "เพลงไทย", "ภาษาไทย", "t-pop")
             "fil" -> listOf("pilipinas", "pilipino", "tagalog", "opm", "p-pop", "pinoy")
-            "he" -> listOf("ישראל", "ישראלי", "ישראלית", "עברית", "מוזיקה ישראלית")
             else -> emptyList()
         }
         return (localeMarkers + LevyraContentLocales.artistSuggestions(normalized).map { it.lowercase(Locale.ROOT) }).distinct()

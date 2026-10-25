@@ -1,5 +1,6 @@
 package com.luc4n3x.levyra.ui.library
 
+import com.luc4n3x.levyra.data.locallibrary.localArtworkModel
 import com.luc4n3x.levyra.domain.DownloadedTrack
 import com.luc4n3x.levyra.domain.FollowedArtist
 import com.luc4n3x.levyra.domain.LibrarySort
@@ -581,7 +582,11 @@ private fun splitLibraryArtists(value: String): List<String> {
         .ifEmpty { listOf(value.trim()).filter(String::isNotBlank) }
 }
 
-private fun DownloadedTrack.toLibraryTrack(): Track = Track(
+private fun DownloadedTrack.toLibraryTrack(): Track {
+    val artwork = uri.takeIf { it.startsWith("content://", ignoreCase = true) }
+        ?.let { localArtworkModel(it, 0L) }
+        .orEmpty()
+    return Track(
     id = trackId.ifBlank { "offline-$id" },
     title = title,
     artist = artist,
@@ -589,8 +594,8 @@ private fun DownloadedTrack.toLibraryTrack(): Track = Track(
     durationMs = durationMs,
     streamUrl = "",
     videoUrl = "",
-    thumbnailUrl = "",
-    largeThumbnailUrl = "",
+    thumbnailUrl = artwork,
+    largeThumbnailUrl = artwork,
     source = "Offline",
     moodTags = emptySet(),
     energy = 0,
@@ -599,4 +604,5 @@ private fun DownloadedTrack.toLibraryTrack(): Track = Track(
     cacheScore = 0,
     accentStart = 0,
     accentEnd = 0
-)
+    )
+}

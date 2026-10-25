@@ -1,5 +1,7 @@
 package com.luc4n3x.levyra.viewmodel
 
+import android.content.ContentUris
+import android.provider.MediaStore
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -35,6 +37,7 @@ import com.luc4n3x.levyra.data.AutomaticBackupScheduler
 import com.luc4n3x.levyra.data.SmartOfflineScheduler
 import com.luc4n3x.levyra.data.SmartOfflineOwnershipGate
 import com.luc4n3x.levyra.data.VaultPreview
+import com.luc4n3x.levyra.data.DownloadFolderReconciler
 import com.luc4n3x.levyra.data.LevyraPreferences
 import com.luc4n3x.levyra.data.ProfilePhotoStore
 import com.luc4n3x.levyra.data.LyricsLatencyProfiles
@@ -890,6 +893,7 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
     private val downloadedTracksDao = database.downloadedTracksDao()
     private val offlineDownloadTasksDao = database.offlineDownloadTasksDao()
     private val downloadedMediaSizeCache = ConcurrentHashMap<String, Long>()
+    private val downloadedUriReadable = ConcurrentHashMap<String, Boolean>()
     private val appUpdateRepository = AppUpdateRepository(application.applicationContext)
     private val lyricsRepository = LyricsRepository(application.applicationContext)
     private val sponsorBlockRepository = SponsorBlockRepository()
@@ -1952,6 +1956,9 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
         observeQueueSpaces()
         observeLocalLibrary()
         observeDownloads()
+        viewModelScope.launch(Dispatchers.IO) {
+            runCatching { DownloadFolderReconciler.reconcile(getApplication()) }
+        }
         observeSmartOfflineSettings()
         observeDownloadTasks()
         observeDownloadBatches()
@@ -3988,7 +3995,12 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             downloadedTracksDao.observeAll().collectLatest { entities ->
                 val mapped = withContext(Dispatchers.IO) {
-                    entities.map { entity -> entity.toDownloadedTrack(downloadedMediaSize(entity.uri)) }
+                    val sizes = downloadedMediaSizes(entities.map { it.uri })
+                    entities.map { entity ->
+                        entity.toDownloadedTrack(
+                            sizes[entity.uri] ?: downloadedMediaSize(entity.uri)
+                        )
+                    }
                 }
                 _state.update {
                     it.copy(
@@ -4034,6 +4046,58 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
         sizeBytes = sizeBytes,
         ownership = DownloadOwnership.fromStorage(ownership)
     )
+
+    /** One MediaStore query for all download sizes instead of a descriptor open per file. */
+    private suspend fun downloadedMediaSizes(uris: List<String>): Map<String, Long> =
+        withContext(Dispatchers.IO) {
+            val resolved = HashMap<String, Long>(uris.size)
+            val byMediaId = LinkedHashMap<Long, String>()
+            val others = ArrayList<String>()
+            uris.forEach { raw ->
+                val cached = downloadedMediaSizeCache[raw]
+                if (cached != null) {
+                    resolved[raw] = cached
+                    return@forEach
+                }
+                val uri = runCatching { Uri.parse(raw) }.getOrNull()
+                val id = uri?.let { runCatching { ContentUris.parseId(it) }.getOrNull() } ?: -1L
+                if (uri != null && uri.scheme.equals("content", ignoreCase = true) && id >= 0L) {
+                    byMediaId[id] = raw
+                } else {
+                    others += raw
+                }
+            }
+            if (byMediaId.isNotEmpty()) {
+                val resolver = getApplication<Application>().contentResolver
+                byMediaId.keys.chunked(400).forEach { chunk ->
+                    val selection = "${MediaStore.Audio.Media._ID} IN (${chunk.joinToString(",")})"
+                    runCatching {
+                        resolver.query(
+                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                            arrayOf(MediaStore.Audio.Media._ID, MediaStore.MediaColumns.SIZE),
+                            selection,
+                            null,
+                            null
+                        )?.use { cursor ->
+                            while (cursor.moveToNext()) {
+                                val id = cursor.getLong(0)
+                                val size = cursor.getLong(1).coerceAtLeast(0L)
+                                byMediaId[id]?.let { raw -> resolved[raw] = size }
+                            }
+                        }
+                    }
+                }
+            }
+            others.forEach { raw ->
+                val uri = runCatching { Uri.parse(raw) }.getOrNull()
+                val size = runCatching {
+                    uri?.path?.let(::File)?.takeIf(File::isFile)?.length() ?: 0L
+                }.getOrDefault(0L)
+                if (size > 0L) resolved[raw] = size
+            }
+            downloadedMediaSizeCache.putAll(resolved)
+            resolved
+        }
 
     private fun downloadedMediaSize(rawUri: String): Long {
         if (rawUri.isBlank()) return 0L
@@ -4840,6 +4904,10 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
 
     fun setGaplessEnabled(value: Boolean) {
         updateAudioSettings(_state.value.audioSettings.copy(gaplessEnabled = value))
+    }
+
+    fun setStopOnTaskRemoval(value: Boolean) {
+        updateAudioSettings(_state.value.audioSettings.copy(stopOnTaskRemoval = value))
     }
 
     fun setPreloadNextTrack(value: Boolean) {
@@ -10264,6 +10332,27 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /**
+     * Imported downloads are keyed by their MediaStore identity, so a track coming from a
+     * YouTube search has a different id. Fall back to title + artist so the local file is used.
+     */
+    private suspend fun matchingDownloadByTitle(track: Track): DownloadEntity? {
+        if (track.title.isBlank()) return null
+        val candidates = downloadedTracksDao.byTitle(track.title)
+        if (candidates.isEmpty()) return null
+        val artist = normalizeDownloadMatch(track.artist)
+        if (artist.isBlank()) return candidates.first()
+        return candidates.firstOrNull { row ->
+            val rowArtist = normalizeDownloadMatch(row.artist)
+            rowArtist.isNotBlank() && (rowArtist.contains(artist) || artist.contains(rowArtist))
+        }
+    }
+
+    private fun normalizeDownloadMatch(value: String): String =
+        value.lowercase(Locale.ROOT)
+            .replace(Regex("[^a-z0-9]+"), " ")
+            .trim()
+
     private fun cancelResolutionSideJobs(preserveMotionPrefetchKey: String? = null) {
         modeSwitchJob?.cancel()
         if (_state.value.pendingVideoMode != null) {
@@ -10334,9 +10423,15 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
             handleUnavailableLocalTrack(track)
             return
         }
+        val resolveStartMs = android.os.SystemClock.elapsedRealtime()
         val instant = localDownloadedTrack(track) ?: resolver.cached(selectedTrack, requestedVideoMode)
         if (instant != null) {
             if (!isCurrentPlaybackRequest(requestId)) return
+            android.util.Log.i(
+                "LevyraPerf",
+                "play instant (${if (instant.source == "Offline") "local" else "cached"}) " +
+                    "${android.os.SystemClock.elapsedRealtime() - resolveStartMs}ms"
+            )
             startPlayback(preserveEditorialArtwork(track, instant), request)
             prefetchAround(instant)
             return
@@ -10344,6 +10439,10 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
         player.stop()
         try {
             val playable = resolveForPlayback(selectedTrack)
+            android.util.Log.i(
+                "LevyraPerf",
+                "play resolved in ${android.os.SystemClock.elapsedRealtime() - resolveStartMs}ms"
+            )
             if (!isCurrentPlaybackRequest(requestId)) return
             startPlayback(playable, request)
             prefetchAround(playable)
@@ -10399,13 +10498,15 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private suspend fun localDownloadedTrack(track: Track): Track? {
-        if (track.id.isBlank() || _state.value.isVideoMode) return null
+        if (_state.value.isVideoMode) return null
+        if (track.id.isBlank() && track.title.isBlank()) return null
         val entity = withContext(Dispatchers.IO) {
             runCatching { downloadedTracksDao.byTrackId(track.id) }.getOrNull()
+                ?: runCatching { matchingDownloadByTitle(track) }.getOrNull()
         } ?: return null
         if (entity.uri.isBlank()) return null
         val uri = android.net.Uri.parse(entity.uri)
-        val readable = withContext(Dispatchers.IO) {
+        val readable = downloadedUriReadable[entity.uri] ?: withContext(Dispatchers.IO) {
             runCatching {
                 when (uri.scheme?.lowercase()) {
                     "content" -> getApplication<Application>().contentResolver.openFileDescriptor(uri, "r")?.use { true } ?: false
@@ -10413,7 +10514,7 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
                     else -> false
                 }
             }.getOrDefault(false)
-        }
+        }.also { downloadedUriReadable[entity.uri] = it }
         if (!readable) return null
         return track.copy(
             streamUrl = entity.uri,

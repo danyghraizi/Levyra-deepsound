@@ -4,6 +4,7 @@ import android.content.Context
 import com.luc4n3x.levyra.data.local.LevyraDatabase
 import com.luc4n3x.levyra.data.local.toFavoriteTrackEntity
 import com.luc4n3x.levyra.data.local.toTrack
+import com.luc4n3x.levyra.data.locallibrary.localArtworkModel
 import com.luc4n3x.levyra.domain.Track
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicLong
@@ -121,6 +122,7 @@ class FavoritesStore(context: Context) {
     }
 
     private suspend fun loadInternal(failOnReadError: Boolean = false): List<Track> {
+        migrateOfflineFavoriteIdentities()
         val entities = runCatching { dao.all() }
             .onFailure { Timber.w(it, "Favorite tracks load failed") }
             .getOrElse { error -> if (failOnReadError) throw error else return emptyList() }
@@ -170,6 +172,36 @@ class FavoritesStore(context: Context) {
         }
     }
 
+    private suspend fun migrateOfflineFavoriteIdentities() {
+        if (legacyPrefs.getBoolean(OFFLINE_IDENTITY_MIGRATION_KEY, false)) return
+        legacyPrefs.edit().putBoolean(OFFLINE_IDENTITY_MIGRATION_KEY, true).apply()
+        val rows = runCatching { dao.all() }.getOrNull().orEmpty()
+        if (rows.none { it.id.startsWith("offline-") }) return
+        val downloads = runCatching {
+            LevyraDatabase.get(appContext).downloadedTracksDao().all()
+        }.getOrNull().orEmpty().associateBy { "offline-${it.id}" }
+        val seen = hashSetOf<String>()
+        val repaired = buildList {
+            rows.sortedBy { it.id.startsWith("offline-") }.forEach { row ->
+                val download = downloads[row.id]
+                val newId = download?.trackId?.takeIf { it.isNotBlank() } ?: row.id
+                if (!seen.add(newId)) return@forEach
+                val artwork = download?.let { localArtworkModel(it.uri, 0L) }
+                add(
+                    if (artwork.isNullOrBlank()) row.toTrack()
+                    else row.copy(
+                        id = newId,
+                        thumbnailUrl = artwork,
+                        largeThumbnailUrl = artwork
+                    ).toTrack()
+                )
+            }
+        }
+        runCatching { replaceAll(repaired) }
+            .onFailure { Timber.w(it, "Offline favourite identity migration failed") }
+        invalidateFavoriteTimestampSnapshots()
+    }
+
     private suspend fun replaceAll(tracks: List<Track>) {
         val existingTimestamps = currentTimestampSnapshot() ?: dao.all().associate {
             it.id to it.createdAt
@@ -211,6 +243,7 @@ class FavoritesStore(context: Context) {
     private companion object {
         const val KEY = "liked_tracks"
         const val MIGRATION_COMPLETE_KEY = "liked_tracks_migrated_to_room"
+        const val OFFLINE_IDENTITY_MIGRATION_KEY = "offline_identity_migration_v1"
     }
 }
 

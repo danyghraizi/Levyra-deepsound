@@ -336,6 +336,8 @@ internal fun srLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Привремена брзина док држиш",
     "downloadEngineSection" to "МОТОР ЗА ПРЕУЗИМАЊЕ 3.0",
     "wifiOnly" to "Само Wi-Fi",
+    "stopOnTaskRemoval" to "Stop playback when closing the app",
+    "stopOnTaskRemovalSubtitle" to "Pause and stop the player when Levyra is swiped away from recents",
     "autoDownloadFavorites" to "Auto-download liked songs",
     "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager покреће преузимања само на мрежи без ограничења података",

@@ -215,6 +215,8 @@ android {
             versionNameSuffix = "-debug"
         }
         release {
+            // Personal build: same package id as the debug install so it upgrades in place.
+            applicationIdSuffix = ".debug"
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false

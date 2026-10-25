@@ -27,6 +27,7 @@ object WidgetStudioStore {
     private const val KEY_CONTROLS = "controls"
     private const val KEY_CONFIGURED = "configured"
     private const val KEY_PROGRESS_REFRESH = "progress_refresh"
+    private const val KEY_LIKE_MIGRATION = "like_v1"
 
     private const val KEY_SESSION_PLAYING = "session_playing"
     private const val KEY_SESSION_TITLE = "session_title"
@@ -62,6 +63,22 @@ object WidgetStudioStore {
             controls = controls
         )
         return family.normalize(stored)
+    }
+
+    /** One-time upgrade: widgets configured before the heart existed get it added. */
+    fun ensureLikeControl(context: Context, widgetId: Int, family: StudioWidgetFamily) {
+        if (StudioControl.Like !in family.controls) return
+        val prefs = configPrefs(context)
+        val flag = key(widgetId, KEY_LIKE_MIGRATION)
+        if (prefs.getBoolean(flag, false)) return
+        prefs.edit().putBoolean(flag, true).apply()
+        val raw = prefs.getString(key(widgetId, KEY_CONTROLS), null) ?: return
+        val controls = raw.split(',').mapNotNullTo(linkedSetOf()) { StudioControl.fromKey(it) }
+        if (StudioControl.Like in controls) return
+        controls.add(StudioControl.Like)
+        prefs.edit()
+            .putString(key(widgetId, KEY_CONTROLS), controls.joinToString(",") { it.key })
+            .apply()
     }
 
     fun isConfigured(context: Context, widgetId: Int): Boolean =

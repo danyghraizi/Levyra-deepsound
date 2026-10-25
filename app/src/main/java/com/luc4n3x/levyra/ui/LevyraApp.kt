@@ -2598,6 +2598,7 @@ fun LevyraApp(
                                     val miniModel = MiniPlayerModel(
                                         track = track,
                                         isPlaying = state.isPlaying,
+                                        favorite = track.id in state.favoriteIds,
                                         isResolving = state.isResolving,
                                         progress = progressOf(state.positionMs, state.durationMs),
                                         bufferedProgress = progressOf(state.bufferedPositionMs, state.durationMs),
@@ -2615,6 +2616,7 @@ fun LevyraApp(
                                     val miniPlaybackActions = MiniPlayerPlaybackActions(
                                         open = { viewModel.selectTab(LevyraTab.Player) },
                                         toggle = viewModel::togglePlay,
+                                        favorite = { viewModel.toggleFavorite(track) },
                                         next = viewModel::next,
                                         previous = viewModel::previous,
                                         close = viewModel::closePlayer
@@ -3134,6 +3136,7 @@ fun LevyraApp(
                     onTempo = viewModel::setPlaybackSpeed,
                     onPitch = viewModel::setPitch,
                     onGapless = viewModel::setGaplessEnabled,
+                    onStopOnTaskRemoval = viewModel::setStopOnTaskRemoval,
                     onPreloadNextTrack = viewModel::setPreloadNextTrack,
                     aaudioOutputAvailable = remember { NativeAudioIntegration.isAaudioOutputSupported() },
                     onAaudioOutput = viewModel::setAaudioOutputEnabled,
@@ -19782,6 +19785,7 @@ private const val PLAYER_LONG_PRESS_ARTWORK_MS = 900L
 internal data class MiniPlayerModel(
     val track: Track,
     val isPlaying: Boolean,
+    val favorite: Boolean,
     val isResolving: Boolean,
     val progress: Float,
     val bufferedProgress: Float,
@@ -19795,6 +19799,7 @@ internal data class MiniPlayerModel(
 internal data class MiniPlayerPlaybackActions(
     val open: () -> Unit,
     val toggle: () -> Unit,
+    val favorite: () -> Unit,
     val next: () -> Unit,
     val previous: () -> Unit,
     val close: () -> Unit
@@ -26375,6 +26380,16 @@ internal fun MiniPlayer(
                             onClick = playbackActions.next
                         )
                     }
+                    PlayerRoundIconButton(
+                        icon = if (model.favorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                        contentDescription = if (model.favorite) strings.removeFromFavorites else strings.addToFavorites,
+                        size = 38.dp,
+                        iconSize = 22.dp,
+                        tint = if (model.favorite) LevyraPink else miniPrimaryContent,
+                        background = Color.White.copy(alpha = 0.10f),
+                        borderColor = Color.Transparent,
+                        onClick = playbackActions.favorite
+                    )
                     Box(
                         modifier = Modifier
                             .sizeIn(minWidth = 40.dp, minHeight = LevyraPlayerDesign.MinimumTouchTarget)

@@ -307,14 +307,6 @@ object LevyraStartupCatalog {
                 track("Libu-Libong Buwan (Uuwian)", "Kyle Raphael", "YouTube Music", "", setOf("pop", "local", "mood"), 68, 92, 95),
                 track("Lifetime", "Ben&Ben", "YouTube Music", "", setOf("folk", "local", "mood"), 64, 94, 96)
             )
-            "he" -> listOf(
-                track("שני משוגעים", "עומר אדם", "YouTube Music", "", setOf("pop", "local", "hit"), 82, 86, 95),
-                track("פנתרה", "נועה קירל", "YouTube Music", "", setOf("pop", "local", "energy"), 94, 78, 94),
-                track("תיק קטן", "נס וסטילה", "YouTube Music", "", setOf("rap", "local", "hit"), 90, 76, 94),
-                track("סחרחורת", "טונה", "YouTube Music", "", setOf("rap", "local", "mood"), 76, 90, 95),
-                track("לשוב הביתה", "ישי ריבו", "YouTube Music", "", setOf("pop", "local", "mood"), 62, 94, 96),
-                track("שמישהו יעצור אותי", "עדן חסון", "YouTube Music", "", setOf("pop", "local", "hit"), 78, 88, 94)
-            )
             else -> listOf(
                 track("As It Was", "Harry Styles", "Harry's House", "H5v3kku4y6Q", setOf("pop", "hit", "local"), 82, 78, 94),
                 track("Flowers", "Miley Cyrus", "Endless Summer Vacation", "G7KNmW9a75Y", setOf("pop", "hit", "local"), 80, 80, 94),

@@ -531,6 +531,10 @@ internal object WidgetStudioRenderer {
             val progressView = if (layout.progress == StudioProgressKind.Bar) R.id.studio_progress else R.id.studio_progress_row
             views.setViewVisibility(progressView, if (visible) View.VISIBLE else View.GONE)
             if (!visible) return
+            if (interactive) {
+                views.setOnClickPendingIntent(R.id.studio_progress, openApp(null, 40))
+                views.setOnClickPendingIntent(R.id.studio_progress_row, openApp(null, 41))
+            }
             val now = SystemClock.elapsedRealtime()
             val position = state.positionAt(now)
             val fraction = position.toFloat() / state.durationMs.toFloat()

@@ -37,6 +37,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.FavoriteBorder
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.CircularWavyProgressIndicator
@@ -484,6 +486,7 @@ internal fun StyledMiniPlayer(
                     animated = animated,
                     compaction = dockCompaction,
                     playbackActions = playbackActions,
+                    favorite = model.favorite,
                     onToggle = {
                         if (tuning.motion == MiniMotion.Expressive) haptics.perform(LevyraHapticAction.Transport)
                         playbackActions.toggle()
@@ -1149,6 +1152,7 @@ private fun MiniStyledControls(
     animated: Boolean,
     compaction: () -> Float,
     playbackActions: MiniPlayerPlaybackActions,
+    favorite: Boolean,
     onToggle: () -> Unit
 ) {
     val strings = LocalLevyraStrings.current
@@ -1192,6 +1196,14 @@ private fun MiniStyledControls(
                     onClick = playbackActions.next
                 )
             }
+            MiniStyledIconButton(
+                icon = if (favorite) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder,
+                contentDescription = if (favorite) strings.removeFromFavorites else strings.addToFavorites,
+                tint = if (favorite) palette.accent else palette.content,
+                background = skipBackground,
+                size = skipSize,
+                onClick = playbackActions.favorite
+            )
             if (tuning.showClose) {
                 Box(
                     modifier = Modifier
@@ -1386,7 +1398,7 @@ internal fun MiniPlayerStylePreview(
     glass: GlassBackdropState?,
     modifier: Modifier = Modifier
 ) {
-    val playback = remember { MiniPlayerPlaybackActions({}, {}, {}, {}, {}) }
+    val playback = remember { MiniPlayerPlaybackActions({}, {}, {}, {}, {}, {}) }
     val expansion = remember { MiniPlayerExpansionActions({}, {}, {}) }
     val anchors = remember { PlayerMorphAnchors() }
     Box(modifier = modifier) {

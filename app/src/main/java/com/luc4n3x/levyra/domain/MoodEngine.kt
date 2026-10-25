@@ -154,7 +154,6 @@ class MoodEngine {
             "vi" -> "🇻🇳"
             "th" -> "🇹🇭"
             "fil" -> "🇵🇭"
-            "he" -> "🇮🇱"
             else -> "🇬🇧"
         }
     }
@@ -301,16 +300,6 @@ class MoodEngine {
                 "drive" to ("Biyahe" to "musika para sa daan"),
                 "sad" to ("Hugot" to "mabagal at malalim na damdamin")
             )
-            "he" -> mapOf(
-                "hits" to ("להיטים עכשיו" to "השירים המושמעים ביותר כרגע"),
-                "gym" to ("אימון" to "כוח ואנרגיה"),
-                "chill" to ("צ'יל" to "רך ורגוע"),
-                "focus" to ("ריכוז" to "ללימודים ולעבודה"),
-                "local" to ("ישראלי" to "מוזיקה ישראלית נבחרת"),
-                "party" to ("מסיבה" to "מגבירים את הווליום"),
-                "drive" to ("נסיעה" to "מוזיקה לדרך"),
-                "sad" to ("מלנכוליה" to "רגשות שזורמים לאט")
-            )
             else -> mapOf(
                 "hits" to ("Trending hits" to "most played now"),
                 "gym" to ("Gym" to "power and energy"),
@@ -340,7 +329,6 @@ class MoodEngine {
             "vi" -> mapOf("hits" to "Hit", "rap" to "Rap & Trap", "local" to "Nhạc Việt", "pop" to "Pop", "gym" to "Tập luyện", "chill" to "Thư giãn", "focus" to "Tập trung", "sad" to "Tâm trạng", "party" to "Tiệc", "rock" to "Rock", "electro" to "Điện tử", "rnb" to "R&B")
             "th" -> mapOf("hits" to "เพลงฮิต", "rap" to "แรปและแทรป", "local" to "เพลงไทย", "pop" to "ป๊อป", "gym" to "ออกกำลังกาย", "chill" to "ชิลล์", "focus" to "มีสมาธิ", "sad" to "เพลงเศร้า", "party" to "ปาร์ตี้", "rock" to "ร็อก", "electro" to "อิเล็กทรอนิกส์", "rnb" to "R&B")
             "fil" -> mapOf("hits" to "Mga hit", "rap" to "Rap at Trap", "local" to "OPM", "pop" to "Pop", "gym" to "Workout", "chill" to "Chill", "focus" to "Pokus", "sad" to "Hugot", "party" to "Party", "rock" to "Rock", "electro" to "Electronic", "rnb" to "R&B")
-            "he" -> mapOf("hits" to "להיטים", "rap" to "ראפ וטראפ", "local" to "ישראלי", "pop" to "פופ", "gym" to "אימון", "chill" to "צ'יל", "focus" to "ריכוז", "sad" to "מלנכוליה", "party" to "מסיבה", "rock" to "רוק", "electro" to "אלקטרוני", "rnb" to "R&B")
             "nl" -> mapOf("hits" to "Hits", "rap" to "Rap & Trap", "local" to "Nederlands", "pop" to "Pop", "gym" to "Sportschool", "chill" to "Chill", "focus" to "Focus", "sad" to "Melancholie", "party" to "Feest", "rock" to "Rock", "electro" to "Elektronisch", "rnb" to "R&B")
             "pl" -> mapOf("hits" to "Hity", "rap" to "Rap i trap", "local" to "Polskie", "pop" to "Pop", "gym" to "Siłownia", "chill" to "Chill", "focus" to "Skupienie", "sad" to "Melancholia", "party" to "Impreza", "rock" to "Rock", "electro" to "Elektronika", "rnb" to "R&B")
             "ro" -> mapOf("hits" to "Hituri", "rap" to "Rap & Trap", "local" to "Românească", "pop" to "Pop", "gym" to "Sală", "chill" to "Chill", "focus" to "Concentrare", "sad" to "Melancolie", "party" to "Petrecere", "rock" to "Rock", "electro" to "Electronică", "rnb" to "R&B")

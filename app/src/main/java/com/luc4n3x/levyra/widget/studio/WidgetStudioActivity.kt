@@ -933,7 +933,7 @@ private fun WidgetThumbnail(
         value = withContext(Dispatchers.Default) {
             val state = demo ?: WidgetStudioStore.playbackState(context)
             if (state.hasTrack && WidgetStudioArtwork.source(state.artworkUrl) == null) {
-                WidgetStudioArtwork.request(state.artworkUrl, skipWhenStale = demo == null) { }
+                WidgetStudioArtwork.request(context, state.artworkUrl, skipWhenStale = demo == null) { }
             }
             runCatching { WidgetStudioRenderer.build(context, family, config, state, size, interactive = false, pixelScale = pixelScale) }
                 .getOrNull()

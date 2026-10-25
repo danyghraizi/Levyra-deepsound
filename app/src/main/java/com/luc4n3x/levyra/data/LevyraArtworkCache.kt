@@ -173,7 +173,11 @@ object LevyraArtworkCache {
     }
 
     fun localFile(context: Context, track: Track, highRes: Boolean = false): File? {
-        if (!localIndexPrimed || artworkUrlCandidates(track, highRes).isEmpty()) return null
+        // Imported offline files carry a pre-extracted cover, cheaper than decoding a thumbnail.
+        DownloadFolderReconciler.offlineArtFile(context.applicationContext, track.id)
+            ?.let { return it }
+        if (artworkUrlCandidates(track, highRes).isEmpty()) return null
+        if (!localIndexPrimed) return null
         val file = persistentFile(context.applicationContext, track, if (highRes) LARGE_SIZE else SMALL_SIZE)
         return if (localIndex.contains(file.name)) file else null
     }

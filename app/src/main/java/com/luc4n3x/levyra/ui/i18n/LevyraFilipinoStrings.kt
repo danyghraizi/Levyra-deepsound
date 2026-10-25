@@ -336,6 +336,8 @@ internal fun filLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Pansamantalang bilis habang nakapindot",
     "downloadEngineSection" to "DOWNLOAD ENGINE 3.0",
     "wifiOnly" to "Wi-Fi lamang",
+    "stopOnTaskRemoval" to "Stop playback when closing the app",
+    "stopOnTaskRemovalSubtitle" to "Pause and stop the player when Levyra is swiped away from recents",
     "autoDownloadFavorites" to "Auto-download liked songs",
     "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "Sisimulan lamang ng WorkManager ang download sa unmetered network",

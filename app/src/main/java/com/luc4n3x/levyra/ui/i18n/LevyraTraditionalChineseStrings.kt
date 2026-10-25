@@ -336,6 +336,8 @@ internal fun zhHantLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "按住時暫時變更速度",
     "downloadEngineSection" to "下載引擎 3.0",
     "wifiOnly" to "僅限 Wi-Fi",
+    "stopOnTaskRemoval" to "Stop playback when closing the app",
+    "stopOnTaskRemovalSubtitle" to "Pause and stop the player when Levyra is swiped away from recents",
     "autoDownloadFavorites" to "Auto-download liked songs",
     "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager 只在不計量的網路上開始下載",

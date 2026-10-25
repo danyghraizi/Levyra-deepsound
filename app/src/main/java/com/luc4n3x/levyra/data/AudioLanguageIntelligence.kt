@@ -63,7 +63,6 @@ object AudioLanguageIntelligence {
             .filter(String::isNotBlank)
         if (parts.isEmpty()) return ""
         val canonicalBase = when (parts.first()) {
-            "iw" -> "he"
             "in" -> "id"
             "tl" -> "fil"
             else -> parts.first()

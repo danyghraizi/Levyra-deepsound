@@ -44,7 +44,6 @@ internal object LevyraDownloadRemovalStrings {
         "vi" to "Xóa bài hát này khỏi mục tải xuống?",
         "th" to "ลบเพลงนี้ออกจากรายการดาวน์โหลดใช่ไหม",
         "fil" to "Alisin ang kantang ito sa mga download?",
-        "he" to "להסיר את השיר הזה מההורדות?"
     )
 
     init {

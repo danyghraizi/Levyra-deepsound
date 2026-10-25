@@ -208,6 +208,7 @@ class LevyraPreferences internal constructor(private val store: LevyraPreference
             mutable[KEY_AUDIO_SPEED] = normalizedAudio.playbackSpeed
             mutable[KEY_AUDIO_PITCH] = normalizedAudio.pitch
             mutable[KEY_AUDIO_GAPLESS] = normalizedAudio.gaplessEnabled
+            mutable[KEY_AUDIO_STOP_ON_TASK_REMOVAL] = normalizedAudio.stopOnTaskRemoval
             mutable[KEY_AUDIO_PRELOAD_NEXT] = normalizedAudio.preloadNextTrack
             mutable[KEY_AUDIO_ADVANCED_QUEUE_PREFETCH] = normalizedAudio.advancedQueuePrefetchTracks
             mutable[KEY_AUDIO_ADVANCED_QUEUE_PREFETCH_MOBILE_DATA] = normalizedAudio.advancedQueuePrefetchOnMobileData
@@ -579,6 +580,7 @@ class LevyraPreferences internal constructor(private val store: LevyraPreference
             it[KEY_AUDIO_SPEED] = normalized.playbackSpeed
             it[KEY_AUDIO_PITCH] = normalized.pitch
             it[KEY_AUDIO_GAPLESS] = normalized.gaplessEnabled
+            it[KEY_AUDIO_STOP_ON_TASK_REMOVAL] = normalized.stopOnTaskRemoval
             it[KEY_AUDIO_PRELOAD_NEXT] = normalized.preloadNextTrack
             it[KEY_AUDIO_ADVANCED_QUEUE_PREFETCH] = normalized.advancedQueuePrefetchTracks
             it[KEY_AUDIO_ADVANCED_QUEUE_PREFETCH_MOBILE_DATA] = normalized.advancedQueuePrefetchOnMobileData
@@ -1075,6 +1077,7 @@ class LevyraPreferences internal constructor(private val store: LevyraPreference
             playbackSpeed = preferences[KEY_AUDIO_SPEED] ?: 1f,
             pitch = preferences[KEY_AUDIO_PITCH] ?: 1f,
             gaplessEnabled = preferences[KEY_AUDIO_GAPLESS] ?: true,
+            stopOnTaskRemoval = preferences[KEY_AUDIO_STOP_ON_TASK_REMOVAL] ?: true,
             preloadNextTrack = preferences[KEY_AUDIO_PRELOAD_NEXT] ?: true,
             advancedQueuePrefetchTracks = preferences[KEY_AUDIO_ADVANCED_QUEUE_PREFETCH] ?: ADVANCED_QUEUE_PREFETCH_OFF,
             advancedQueuePrefetchOnMobileData = preferences[KEY_AUDIO_ADVANCED_QUEUE_PREFETCH_MOBILE_DATA] ?: false,
@@ -1342,6 +1345,7 @@ class LevyraPreferences internal constructor(private val store: LevyraPreference
         val KEY_AUDIO_SPEED = floatPreferencesKey("audio_speed")
         val KEY_AUDIO_PITCH = floatPreferencesKey("audio_pitch")
         val KEY_AUDIO_GAPLESS = booleanPreferencesKey("audio_gapless")
+        val KEY_AUDIO_STOP_ON_TASK_REMOVAL = booleanPreferencesKey("audio_stop_on_task_removal")
         val KEY_AUDIO_PRELOAD_NEXT = booleanPreferencesKey("audio_preload_next_track")
         val KEY_AUDIO_ADVANCED_QUEUE_PREFETCH = intPreferencesKey("audio_advanced_queue_prefetch_tracks")
         val KEY_AUDIO_ADVANCED_QUEUE_PREFETCH_MOBILE_DATA = booleanPreferencesKey("audio_advanced_queue_prefetch_mobile_data")

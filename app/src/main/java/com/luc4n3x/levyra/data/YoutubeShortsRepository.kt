@@ -457,7 +457,6 @@ private fun localizedShortQueries(languageCode: String): List<String> {
         "vi" -> listOf("nhạc Việt #shorts", "bài hát Việt mới #shorts", "hit Việt Nam #shorts", "nhạc viral #shorts")
         "th" -> listOf("เพลงไทย #shorts", "เพลงไทยใหม่ #shorts", "เพลงฮิตไทย #shorts", "เพลงไวรัล #shorts")
         "fil" -> listOf("OPM #shorts", "bagong kantang Pilipino #shorts", "Pinoy hits #shorts", "viral music Pilipinas #shorts")
-        "he" -> listOf("מוזיקה ישראלית #shorts", "להיטים ישראליים #shorts", "שירים ישראליים חדשים #shorts", "מוזיקה ויראלית #shorts")
         else -> listOf("music #shorts", "songs right now #shorts", "new music #shorts", "viral music #shorts")
     }
 }

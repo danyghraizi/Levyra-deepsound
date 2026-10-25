@@ -351,3 +351,21 @@ For the complete legal terms covering technical interoperability, user responsib
 <div align="center">
   <sub><b>🇮🇹 Made in Italy. Built for the world.</b></sub>
 </div>
+
+---
+
+## Personal fork
+
+This repository is a fork of [LUC4N3X/Levyra-deepsound](https://github.com/LUC4N3X/Levyra-deepsound)
+(GPL-3.0, see `LICENSE`), maintained for personal use. It keeps the upstream licence and
+attribution and adds:
+
+- auto-download of a track when it is added to Favorites (on-device, via the existing worker)
+- import of audio already present in `Music/Levyra` into the Offline section, with tags,
+  artwork and a MediaStore-backed identity shared with the local library
+- local-file playback from any screen (title + artist fallback) instead of streaming
+- charts: Lebanon market support (Arabic chart data + repertoire search)
+- widget: local artwork support, Like control, tap-to-open progress
+- miniplayer: favorite heart, immediate stop on manual skip
+- performance: batched download-size queries, library catalog off the main thread,
+  cached artwork, cached local-file checks, batched imports

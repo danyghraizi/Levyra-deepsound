@@ -47,7 +47,6 @@ object LevyraLocalizedDiscovery {
             "vi" -> listOf("nhạc Việt mới 2026", "rap Việt mới", "nhạc tập luyện", "playlist lái xe ban đêm", "V-pop mới")
             "th" -> listOf("เพลงไทยใหม่ 2026", "แรปไทยใหม่", "เพลงออกกำลังกาย", "เพลย์ลิสต์ขับรถกลางคืน", "เพลงป๊อปไทยใหม่")
             "fil" -> listOf("bagong OPM 2026", "bagong Pinoy rap", "musikang pang-workout", "playlist para sa night drive", "bagong P-pop")
-            "he" -> listOf("שירים ישראליים חדשים 2026", "ראפ ישראלי חדש", "מוזיקה לאימון", "פלייליסט לנסיעה בלילה", "פופ ישראלי חדש")
             else -> listOf("new music 2026", "top hits 2026", "gym music", "night drive playlist", "fresh pop hits")
         }.let { list ->
             if (query.isBlank()) list else list.map { item -> if (item.lowercase().contains(query)) item else "$query $item" }

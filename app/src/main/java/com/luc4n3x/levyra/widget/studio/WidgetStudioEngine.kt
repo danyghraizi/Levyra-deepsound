@@ -89,11 +89,12 @@ object WidgetStudioEngine {
         if (placed.all { it.second.isEmpty() }) return
         val state = WidgetStudioStore.playbackState(context)
         if (state.hasTrack && state.artworkUrl.isNotBlank() && WidgetStudioArtwork.source(state.artworkUrl) == null) {
-            WidgetStudioArtwork.request(state.artworkUrl) { requestRender(context) }
+            WidgetStudioArtwork.request(context, state.artworkUrl) { requestRender(context) }
         }
         for ((family, ids) in placed) {
             for (id in ids) {
                 runCatching {
+                    WidgetStudioStore.ensureLikeControl(context, id, family)
                     val config = WidgetStudioStore.config(context, id, family)
                     val size = WidgetStudioRenderer.sizeOf(context, manager.getAppWidgetOptions(id), family)
                     manager.updateAppWidget(id, WidgetStudioRenderer.build(context, family, config, state, size, interactive = true))
@@ -108,6 +109,7 @@ object WidgetStudioEngine {
         for (family in StudioWidgetFamily.entries) {
             for (id in widgetIds(context, manager, family)) {
                 runCatching {
+                    WidgetStudioStore.ensureLikeControl(context, id, family)
                     val config = WidgetStudioStore.config(context, id, family)
                     val size = WidgetStudioRenderer.sizeOf(context, manager.getAppWidgetOptions(id), family)
                     WidgetStudioRenderer.buildProgress(context, family, config, state, size)

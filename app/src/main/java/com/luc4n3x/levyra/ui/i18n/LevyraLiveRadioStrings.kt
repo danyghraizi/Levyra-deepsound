@@ -71,7 +71,6 @@ internal object LevyraLiveRadioCatalog {
         "vi" to listOf("Phổ biến", "Âm nhạc", "Pop", "Rock", "Hip-Hop", "Điện tử", "Dance", "Chill", "Jazz", "Cổ điển", "Tin tức", "Trò chuyện", "Thể thao", "Địa phương", "Toàn thế giới"),
         "th" to listOf("ยอดนิยม", "เพลง", "ป๊อป", "ร็อก", "ฮิปฮอป", "อิเล็กทรอนิกส์", "แดนซ์", "ชิล", "แจ๊ส", "คลาสสิก", "ข่าว", "พูดคุย", "กีฬา", "ท้องถิ่น", "ทั่วโลก"),
         "fil" to listOf("Sikat", "Musika", "Pop", "Rock", "Hip-Hop", "Elektronika", "Dance", "Chill", "Jazz", "Klasikal", "Balita", "Usapan", "Isports", "Lokal", "Buong mundo"),
-        "he" to listOf("פופולרי", "מוזיקה", "פופ", "רוק", "היפ-הופ", "אלקטרוני", "דאנס", "צ'יל", "ג'אז", "קלאסי", "חדשות", "שיחות", "ספורט", "מקומי", "כל העולם")
     )
 
     private val unavailableValues = mapOf(
@@ -104,7 +103,7 @@ internal object LevyraLiveRadioCatalog {
         "hi" to "लाइव स्ट्रीम उपलब्ध नहीं है", "id" to "Streaming langsung tidak tersedia",
         "ms" to "Strim langsung tidak tersedia",
         "vi" to "Luồng trực tiếp không khả dụng", "th" to "สตรีมสดไม่พร้อมใช้งาน",
-        "fil" to "Hindi available ang live stream", "he" to "השידור החי אינו זמין"
+        "fil" to "Hindi available ang live stream"
     )
 
     private val reconnectingValues = mapOf(
@@ -133,7 +132,7 @@ internal object LevyraLiveRadioCatalog {
         "hi" to "फिर से कनेक्ट हो रहा है…", "id" to "Menyambungkan ulang…",
         "ms" to "Menyambung semula…",
         "vi" to "Đang kết nối lại…", "th" to "กำลังเชื่อมต่อใหม่…",
-        "fil" to "Muling kumokonekta…", "he" to "מתחבר מחדש…"
+        "fil" to "Muling kumokonekta…"
     )
 
     private val advertisementValues = mapOf(
@@ -159,7 +158,6 @@ internal object LevyraLiveRadioCatalog {
         "hi" to "विज्ञापन", "id" to "Iklan",
         "ms" to "Iklan", "vi" to "Quảng cáo",
         "th" to "โฆษณา", "fil" to "Patalastas",
-        "he" to "פרסומת"
     )
 
     private val values = mapOf(
@@ -203,7 +201,6 @@ internal object LevyraLiveRadioCatalog {
         "vi" to radio("Các đài phát trực tiếp trên khắp thế giới", "Đài trực tiếp", "Phổ biến tại %s", "Toàn thế giới", "Danh mục", "Quốc gia", "Ngôn ngữ", "Tìm theo tên, quốc gia, thẻ hoặc ngôn ngữ", "Không có đài trực tiếp phù hợp", "Hiển thị đài đã lưu trong khi kết nối lại", "Cần Internet để nghe radio trực tiếp", "Tải thêm", englishCategories),
         "th" to radio("สถานีสดจากทั่วโลก", "สถานีสด", "ยอดนิยมใน %s", "ทั่วโลก", "หมวดหมู่", "ประเทศ", "ภาษา", "ค้นหาตามชื่อ ประเทศ แท็ก หรือภาษา", "ไม่พบสถานีสดที่ตรงกัน", "แสดงสถานีที่บันทึกไว้ระหว่างเชื่อมต่อใหม่", "ต้องใช้อินเทอร์เน็ตสำหรับวิทยุสด", "โหลดเพิ่ม", englishCategories),
         "fil" to radio("Mga live station mula sa buong mundo", "Mga live station", "Sikat sa %s", "Buong mundo", "Mga kategorya", "Mga bansa", "Mga wika", "Maghanap ayon sa pangalan, bansa, tag, o wika", "Walang katugmang live station", "Ipinapakita ang mga naka-save na station habang kumokonekta", "Kailangan ng Internet para sa live radio", "Mag-load pa", englishCategories),
-        "he" to radio("תחנות חיות מכל העולם", "תחנות חיות", "פופולרי ב%s", "בכל העולם", "קטגוריות", "מדינות", "שפות", "חיפוש לפי שם, מדינה, תגית או שפה", "לא נמצאו תחנות חיות", "מציג תחנות שמורות בזמן החיבור", "נדרש אינטרנט לרדיו חי", "טען עוד", englishCategories)
     ).mapValues { (code, strings) ->
         strings.copy(categoryLabels = localizedValueOrEnglish(localizedCategories, code))
     }

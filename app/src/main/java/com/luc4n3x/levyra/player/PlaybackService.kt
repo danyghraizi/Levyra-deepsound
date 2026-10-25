@@ -1660,6 +1660,11 @@ class PlaybackService : MediaLibraryService() {
         queueSkipJob = serviceScope.launch {
             val player = activePlayer ?: return@launch
             if (allowRewind && rewindInsteadOfSkip(player, forward)) return@launch
+            if (!autoAdvance) {
+                // Manual skip: stop the current song straight away instead of letting it play
+                // while the next stream resolves.
+                runCatching { player.pause() }
+            }
             val target = withContext(Dispatchers.IO) {
                 selectSkipTarget(forward, respectRepeatOne)
             } ?: return@launch
@@ -2057,9 +2062,16 @@ class PlaybackService : MediaLibraryService() {
         val targetIdentity = playbackQueueIdentity(target)
         var secondary: ExoPlayer? = null
         try {
-            val resolved = awaitPreparedQueueTrackForTransition(currentIdentity, targetIdentity)
-                ?: withContext(Dispatchers.IO) { resolveQueueTrack(target) }
+            val transitionStartMs = android.os.SystemClock.elapsedRealtime()
+            val prepared = awaitPreparedQueueTrackForTransition(currentIdentity, targetIdentity)
+            val resolveMs = android.os.SystemClock.elapsedRealtime() - transitionStartMs
+            val resolved = prepared ?: withContext(Dispatchers.IO) { resolveQueueTrack(target) }
+            android.util.Log.i(
+                "LevyraPerf",
+                "transition resolve: ${if (prepared != null) "prefetched" else "on-demand"} ${resolveMs}ms"
+            )
             if (!transitionStillValid(snapshot.generation, currentIdentity, targetIdentity, primary)) return
+            val prepareStartMs = android.os.SystemClock.elapsedRealtime()
             secondary = prepareTransitionPlayerWithDecoderFallback(
                 track = resolved,
                 queueSnapshot = snapshot,
@@ -2067,6 +2079,11 @@ class PlaybackService : MediaLibraryService() {
             ) {
                 transitionStillValid(snapshot.generation, currentIdentity, targetIdentity, primary)
             } ?: return
+            android.util.Log.i(
+                "LevyraPerf",
+                "transition secondary ready in ${android.os.SystemClock.elapsedRealtime() - prepareStartMs}ms, " +
+                    "remaining ${primary.duration - primary.currentPosition}ms, fade ${plan.transitionMs}ms"
+            )
 
             while (primary.duration > 0L && primary.duration - primary.currentPosition > plan.transitionMs) {
                 if (!transitionStillValid(snapshot.generation, currentIdentity, targetIdentity, primary)) return
@@ -2658,6 +2675,13 @@ class PlaybackService : MediaLibraryService() {
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? = mediaSession
 
     override fun onTaskRemoved(rootIntent: Intent?) {
+        val stopOnClose = runCatching {
+            LevyraPreferences(this).audioSettings().stopOnTaskRemoval
+        }.getOrDefault(true)
+        if (stopOnClose) {
+            pauseAllPlayersAndStopSelf()
+            return
+        }
         val player = mediaSession?.player
         val playbackExpected = playbackStateStore.getBoolean(KEY_PLAYBACK_EXPECTED, false)
         val keepAlive = player != null &&

@@ -293,6 +293,10 @@ class ChartsRepository(context: Context) {
     }
 
     private suspend fun selectTopSongs(country: String, limit: Int): List<Track> = coroutineScope {
+        if (country.trim().equals("lb", ignoreCase = true)) {
+            val lebanese = lebanonChart(limit)
+            if (lebanese.isNotEmpty()) return@coroutineScope lebanese
+        }
         val editorial = editorialCharts.cachedTopTracks(country, limit)
         if (editorial.isNotEmpty()) return@coroutineScope editorial
         editorialCharts.warm()
@@ -314,6 +318,23 @@ class ChartsRepository(context: Context) {
             return@coroutineScope first.second
         }
         if (first.first) apple.await() else youtube.await()
+    }
+
+    /**
+     * Lebanon has no Apple or YouTube Music chart. Combine the Arabic chart of the nearest
+     * storefront (Saudi Arabia) with Lebanese/Arabic repertoire searches.
+     */
+    private suspend fun lebanonChart(limit: Int): List<Track> = coroutineScope {
+        val apple = async { runCatching { fetchAppleTopSongs("sa", limit) }.getOrDefault(emptyList()) }
+        val search = async {
+            runCatching { youtubeMusicCharts.lebanonChart(limit) }.getOrDefault(emptyList())
+        }
+        val merged = LinkedHashMap<String, Track>()
+        (search.await() + apple.await()).forEach { track ->
+            val key = "${track.title.trim().lowercase()}|${track.artist.trim().lowercase()}"
+            if (track.id.isNotBlank()) merged.putIfAbsent(key, track)
+        }
+        merged.values.take(limit)
     }
 
     private suspend fun fetchYoutubeTopSongs(country: String, limit: Int): List<Track> {

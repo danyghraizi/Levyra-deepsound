@@ -229,6 +229,9 @@ internal object RemoteAnnouncementParser {
                 val sourceCode = keys.next()
                 val normalized = LevyraLanguageCatalog.normalize(sourceCode)
                 if (normalized !in supportedLanguageCodes) continue
+                // normalize() falls back to "en" for unknown codes (e.g. removed languages),
+                // which would let a foreign translation overwrite the English copy.
+                if (normalized == "en" && !sourceCode.equals("en", ignoreCase = true)) continue
                 val copyObject = translationsObject.optJSONObject(sourceCode) ?: continue
                 parseCopy(copyObject, actionRequired)?.let { put(normalized, it) }
             }

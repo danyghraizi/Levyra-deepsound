@@ -1,13 +1,43 @@
 package com.luc4n3x.levyra.widget
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
+import android.util.Size
+import com.luc4n3x.levyra.data.locallibrary.isLocalArtworkModel
+import com.luc4n3x.levyra.data.locallibrary.parseLocalArtworkModel
 import com.luc4n3x.levyra.data.security.SafeImageUrlPolicy
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
 internal object WidgetArtworkDownloader {
+    fun isLoadable(url: String): Boolean =
+        isLocalArtworkModel(url) ||
+            url.startsWith("content://", ignoreCase = true) ||
+            SafeImageUrlPolicy.sanitize(url).isNotEmpty()
+
+    fun decode(context: Context, url: String, minSide: Int): Bitmap? =
+        localBitmap(context, url, minSide) ?: decode(url, minSide)
+
+    private fun localBitmap(context: Context, url: String, minSide: Int): Bitmap? {
+        val contentUri = when {
+            isLocalArtworkModel(url) -> parseLocalArtworkModel(url)?.contentUri
+            url.startsWith("content://", ignoreCase = true) -> url
+            else -> null
+        } ?: return null
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return null
+        return runCatching {
+            context.contentResolver.loadThumbnail(
+                Uri.parse(contentUri),
+                Size(minSide, minSide),
+                null
+            )
+        }.getOrNull()
+    }
+
     fun decode(url: String, minSide: Int): Bitmap? {
         val bytes = download(url) ?: return null
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }

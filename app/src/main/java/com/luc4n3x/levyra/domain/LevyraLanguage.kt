@@ -50,12 +50,11 @@ object LevyraLanguageCatalog {
         LevyraLanguageOption("ms", "🇲🇾", "Malay", "Bahasa Melayu"),
         LevyraLanguageOption("vi", "🇻🇳", "Vietnamese", "Tiếng Việt"),
         LevyraLanguageOption("th", "🇹🇭", "Thai", "ไทย"),
-        LevyraLanguageOption("fil", "🇵🇭", "Filipino", "Filipino"),
-        LevyraLanguageOption("he", "🇮🇱", "Hebrew", "עברית")
+        LevyraLanguageOption("fil", "🇵🇭", "Filipino", "Filipino")
     )
 
     private val supportedCodes = languages.map { it.code }.toSet()
-    private val rtlCodes = setOf("ar", "fa", "he")
+    private val rtlCodes = setOf("ar", "fa")
     private val traditionalChineseRegions = setOf("TW", "HK", "MO")
 
     fun normalize(code: String): String {
@@ -65,7 +64,6 @@ object LevyraLanguageCatalog {
         val language = when (locale.language.lowercase(Locale.ROOT)) {
             "in" -> "id"
             "tl" -> "fil"
-            "iw" -> "he"
             else -> locale.language.lowercase(Locale.ROOT)
         }
         val canonical = when {

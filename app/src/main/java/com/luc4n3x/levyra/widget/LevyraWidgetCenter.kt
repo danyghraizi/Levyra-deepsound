@@ -130,11 +130,11 @@ object LevyraWidgetCenter {
     }
 
     private fun fetchArtwork(context: Context, url: String) {
-        if (SafeImageUrlPolicy.sanitize(url).isEmpty()) return
+        if (!WidgetArtworkDownloader.isLoadable(url)) return
         if (!fetching.compareAndSet(false, true)) return
         Thread {
             try {
-                val bitmap = WidgetArtworkDownloader.decode(url, 256)
+                val bitmap = WidgetArtworkDownloader.decode(context, url, 256)
                 if (bitmap != null) {
                     cachedArtwork = bitmap
                     cachedArtworkUrl = url

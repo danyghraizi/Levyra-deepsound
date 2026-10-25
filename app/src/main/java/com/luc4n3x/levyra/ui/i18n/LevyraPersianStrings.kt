@@ -336,6 +336,8 @@ internal fun faLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "سرعت موقت تا وقتی نگه می‌دارید",
     "downloadEngineSection" to "موتور دانلود ۳.۰",
     "wifiOnly" to "فقط Wi-Fi",
+    "stopOnTaskRemoval" to "Stop playback when closing the app",
+    "stopOnTaskRemovalSubtitle" to "Pause and stop the player when Levyra is swiped away from recents",
     "autoDownloadFavorites" to "Auto-download liked songs",
     "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager دانلودها را فقط روی شبکهٔ بدون محدودیت حجم آغاز می‌کند",

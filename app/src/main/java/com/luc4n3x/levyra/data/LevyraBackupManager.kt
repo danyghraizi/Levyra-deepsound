@@ -650,72 +650,8 @@ class LevyraBackupManager(private val context: Context) {
         SmartOfflineScheduler.schedule(appContext, restoredSettings.smartOfflineSettings)
     }
 
-    private fun scanLevyraDownloads(): List<DownloadEntity> {
-        val resolver = appContext.contentResolver
-        val scoped = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-        val collection = if (scoped) {
-            MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-        } else {
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        }
-        val projection = arrayOf(
-            MediaStore.Audio.Media._ID,
-            MediaStore.MediaColumns.DISPLAY_NAME,
-            MediaStore.MediaColumns.MIME_TYPE,
-            MediaStore.Audio.Media.TITLE,
-            MediaStore.Audio.Media.ARTIST,
-            MediaStore.Audio.Media.ALBUM,
-            MediaStore.Audio.Media.DURATION,
-            MediaStore.MediaColumns.DATE_ADDED
-        )
-        val selection = if (scoped) {
-            "${MediaStore.MediaColumns.RELATIVE_PATH} LIKE ? AND ${MediaStore.MediaColumns.SIZE} > 0 AND ${MediaStore.MediaColumns.IS_PENDING} = 0"
-        } else {
-            "${MediaStore.MediaColumns.DATA} LIKE ? AND ${MediaStore.MediaColumns.SIZE} > 0"
-        }
-        val path = if (scoped) {
-            "${Environment.DIRECTORY_MUSIC}/Levyra/%"
-        } else {
-            "%${File.separator}${Environment.DIRECTORY_MUSIC}${File.separator}Levyra${File.separator}%"
-        }
-        return runCatching {
-            resolver.query(collection, projection, selection, arrayOf(path), null)?.use { cursor ->
-                val id = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-                val fileName = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME)
-                val mimeType = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.MIME_TYPE)
-                val title = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-                val artist = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
-                val album = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
-                val duration = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-                val savedAt = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED)
-                buildList {
-                    while (cursor.moveToNext()) {
-                        val name = cursor.getString(fileName).orEmpty()
-                        val mediaTitle = cursor.getString(title)?.takeUnless { it.isBlank() || it == MediaStore.UNKNOWN_STRING }
-                            ?: name.substringBeforeLast('.').ifBlank { "Levyra Track" }
-                        add(
-                            DownloadEntity(
-                                trackId = "",
-                                title = mediaTitle,
-                                artist = cursor.getString(artist).orEmpty().takeUnless { it == MediaStore.UNKNOWN_STRING }.orEmpty(),
-                                album = cursor.getString(album).orEmpty().takeUnless { it == MediaStore.UNKNOWN_STRING }.orEmpty(),
-                                durationMs = cursor.getLong(duration).coerceAtLeast(0L),
-                                fileName = name,
-                                uri = ContentUris.withAppendedId(collection, cursor.getLong(id)).toString(),
-                                mimeType = cursor.getString(mimeType).orEmpty(),
-                                embeddedMetadata = false,
-                                downloadPreset = "",
-                                downloadQuality = "",
-                                savedAt = (cursor.getLong(savedAt) * 1_000L).coerceAtLeast(0L)
-                            )
-                        )
-                    }
-                }
-            }.orEmpty()
-        }.onFailure { error ->
-            Timber.w(error, "Offline MediaStore reconciliation failed")
-        }.getOrDefault(emptyList())
-    }
+    private fun scanLevyraDownloads(): List<DownloadEntity> =
+        DownloadFolderScanner.scan(appContext)
 
     private fun downloadUriReadable(rawUri: String): Boolean {
         if (rawUri.isBlank()) return false

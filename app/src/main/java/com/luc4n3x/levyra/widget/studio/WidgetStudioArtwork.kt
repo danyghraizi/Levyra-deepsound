@@ -1,5 +1,6 @@
 package com.luc4n3x.levyra.widget.studio
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.LruCache
 import com.luc4n3x.levyra.data.security.SafeImageUrlPolicy
@@ -36,9 +37,15 @@ internal object WidgetStudioArtwork {
 
     fun seed(url: String): Int? = if (url.isBlank()) null else seeds.get(url)
 
-    fun request(url: String, skipWhenStale: Boolean = true, onReady: () -> Unit) {
+    fun request(
+        context: Context,
+        url: String,
+        skipWhenStale: Boolean = true,
+        onReady: () -> Unit
+    ) {
         if (url.isBlank() || sources.get(url) != null) return
-        if (SafeImageUrlPolicy.sanitize(url).isEmpty()) return
+        if (!WidgetArtworkDownloader.isLoadable(url)) return
+        val appContext = context.applicationContext
         val lastFailure = failed.get(url)
         if (lastFailure != null && System.currentTimeMillis() - lastFailure < RETRY_AFTER_FAILURE_MS) return
         if (skipWhenStale) latestRequested = url
@@ -46,7 +53,7 @@ internal object WidgetStudioArtwork {
         executor.execute {
             try {
                 if (skipWhenStale && latestRequested != url) return@execute
-                val bitmap = WidgetArtworkDownloader.decode(url, SOURCE_MIN_SIDE)?.let(::bounded)
+                val bitmap = WidgetArtworkDownloader.decode(appContext, url, SOURCE_MIN_SIDE)?.let(::bounded)
                 if (bitmap == null) {
                     failed.put(url, System.currentTimeMillis())
                     return@execute

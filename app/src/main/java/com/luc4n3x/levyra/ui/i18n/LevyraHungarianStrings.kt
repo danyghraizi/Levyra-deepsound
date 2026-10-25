@@ -336,6 +336,8 @@ internal fun huLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Ideiglenes sebesség, amíg nyomva tartod",
     "downloadEngineSection" to "LETÖLTŐMOTOR 3.0",
     "wifiOnly" to "Csak Wi-Fi",
+    "stopOnTaskRemoval" to "Stop playback when closing the app",
+    "stopOnTaskRemovalSubtitle" to "Pause and stop the player when Levyra is swiped away from recents",
     "autoDownloadFavorites" to "Auto-download liked songs",
     "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "A WorkManager csak nem forgalomkorlátos hálózaton indít letöltést",

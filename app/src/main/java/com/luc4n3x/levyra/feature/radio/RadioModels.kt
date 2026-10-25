@@ -205,7 +205,6 @@ internal object RadioLanguagePreferences {
         preference("vi", "Vietnamese", "VN"),
         preference("th", "Thai", "TH"),
         preference("fil", "Filipino", "PH"),
-        preference("he", "Hebrew", "IL")
     ).associateBy { it.levyraCode }
 
     init {

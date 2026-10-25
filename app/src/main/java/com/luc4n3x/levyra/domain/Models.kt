@@ -130,7 +130,7 @@ object ChartsCatalog {
         ChartRegion("vn", "Việt Nam", "🇻🇳", "vn"),
         ChartRegion("th", "ประเทศไทย", "🇹🇭", "th"),
         ChartRegion("ph", "Pilipinas", "🇵🇭", "ph"),
-        ChartRegion("il", "ישראל", "🇮🇱", "il"),
+        ChartRegion("lb", "لبنان", "🇱🇧", "lb"),
         ChartRegion("tw", "台灣", "🇹🇼", "tw"),
         ChartRegion("hu", "Magyarország", "🇭🇺", "hu"),
         ChartRegion("bg", "България", "🇧🇬", "bg"),

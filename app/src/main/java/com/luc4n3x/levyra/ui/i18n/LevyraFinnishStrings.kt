@@ -336,6 +336,8 @@ internal fun fiLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Väliaikainen nopeus niin kauan kuin pidät painettuna",
     "downloadEngineSection" to "LATAUSMOOTTORI 3.0",
     "wifiOnly" to "Vain Wi-Fi",
+    "stopOnTaskRemoval" to "Stop playback when closing the app",
+    "stopOnTaskRemovalSubtitle" to "Pause and stop the player when Levyra is swiped away from recents",
     "autoDownloadFavorites" to "Auto-download liked songs",
     "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager käynnistää lataukset vain rajoittamattomassa verkossa",

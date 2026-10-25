@@ -57,6 +57,10 @@ fun mediaSessionArtworkUri(artwork: String): android.net.Uri? {
     if (artwork.isBlank()) return null
     if (!isLocalArtworkModel(artwork)) return android.net.Uri.parse(artwork)
     val reference = parseLocalArtworkModel(artwork) ?: return null
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        // Media3 loads content:// artwork through the content resolver.
+        return android.net.Uri.parse(reference.contentUri)
+    }
     val albumId = reference.albumId.takeIf { it > 0L } ?: return null
     val albumArt = ContentUris.withAppendedId(LEGACY_ALBUM_ART_URI, albumId)
     if (reference.revision <= 0L) return albumArt

@@ -193,6 +193,7 @@ internal fun AudioSettingsPanel(
     onTempo: (Float) -> Unit,
     onPitch: (Float) -> Unit,
     onGapless: (Boolean) -> Unit,
+    onStopOnTaskRemoval: (Boolean) -> Unit,
     onPreloadNextTrack: (Boolean) -> Unit,
     aaudioOutputAvailable: Boolean,
     onAaudioOutput: (Boolean) -> Unit,
@@ -547,6 +548,14 @@ internal fun AudioSettingsPanel(
                         subtitle = strings.preloadNextTrackSubtitle,
                         checked = audioSettings.preloadNextTrack,
                         onCheckedChange = onPreloadNextTrack
+                    )
+                }
+                item {
+                    AudioToggleRow(
+                        title = strings.stopOnTaskRemoval,
+                        subtitle = strings.stopOnTaskRemovalSubtitle,
+                        checked = audioSettings.stopOnTaskRemoval,
+                        onCheckedChange = onStopOnTaskRemoval
                     )
                 }
                 item { AudioSectionLabel(bufferCopy.title) }

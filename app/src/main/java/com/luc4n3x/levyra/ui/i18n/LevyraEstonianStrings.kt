@@ -336,6 +336,8 @@ internal fun etLocalizationEntries(): Map<String, String> = mapOf(
     "longPressSubtitle" to "Ajutine kiirus seni, kuni hoiad all",
     "downloadEngineSection" to "ALLALAADIMOOTOR 3.0",
     "wifiOnly" to "Ainult Wi-Fi",
+    "stopOnTaskRemoval" to "Stop playback when closing the app",
+    "stopOnTaskRemovalSubtitle" to "Pause and stop the player when Levyra is swiped away from recents",
     "autoDownloadFavorites" to "Auto-download liked songs",
     "autoDownloadFavoritesSubtitle" to "Save a local copy as soon as a song is added to your likes",
     "wifiOnlySubtitle" to "WorkManager alustab allalaadimist ainult piiranguteta võrgus",

@@ -784,25 +784,6 @@ internal object LevyraOnboardingYoutubeMusicStrings {
             "Hindi nakakonekta. Subukang muli o magpatuloy nang walang account.",
             "Bago: ikonekta ang YouTube Music"
         ),
-        "he" to OnboardingYoutubeMusicCopy(
-            "המוזיקה שלך, גם כאן",
-            "אפשר לחבר את YouTube Music כדי למצוא כאן את הפלייליסטים, השירים שאהבת והספרייה שלך.",
-            "לגמרי אופציונלי",
-            "Levyra עובדת גם בלי חשבון. אפשר לחבר אותו מאוחר יותר בהגדרות.",
-            "התחברות עם Google",
-            "ההתחברות מתבצעת בדף של Google, לא בטופס של Levyra. הסשן נשמר מוצפן במכשיר הזה.",
-            "חיבור YouTube Music",
-            "המשך בלי חשבון",
-            "החשבון חובר",
-            "אפשר לעיין בפלייליסטים ובשירים שאהבת ולייבא אותם מתי שרוצים.",
-            "התחברות ל-YouTube Music",
-            "בודקים את החשבון…",
-            "ניסיון חוזר",
-            "אין גישה ל-YouTube Music. כדאי לבדוק את החיבור ולנסות שוב.",
-            "ההתחברות לא הושלמה. אפשר לנסות שוב או להמשיך בלי חשבון.",
-            "החיבור נכשל. אפשר לנסות שוב או להמשיך בלי חשבון.",
-            "חדש: חיבור YouTube Music"
-        )
     )
 
     init {
