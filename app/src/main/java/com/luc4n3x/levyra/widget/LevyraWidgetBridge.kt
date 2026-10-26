@@ -2,13 +2,13 @@ package com.luc4n3x.levyra.widget
 
 object LevyraWidgetBridge {
     @Volatile
-    var onToggle: (() -> Unit)? = null
+    var onToggle: (() -> Boolean)? = null
 
     @Volatile
-    var onNext: (() -> Unit)? = null
+    var onNext: (() -> Boolean)? = null
 
     @Volatile
-    var onPrevious: (() -> Unit)? = null
+    var onPrevious: (() -> Boolean)? = null
 
     fun clear() {
         onToggle = null

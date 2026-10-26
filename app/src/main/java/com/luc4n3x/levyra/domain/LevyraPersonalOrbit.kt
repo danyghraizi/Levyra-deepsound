@@ -535,9 +535,9 @@ object LevyraPersonalOrbit {
         val candidateArtists = normalizedArtists(track.artist).toSet()
         val candidateAlbum = normalizedMusicTitle(track.album)
         val candidateMoods = track.moodTags.map { it.lowercase(Locale.ROOT) }.toSet()
-        val artistHits = seeds.count { seed -> candidateArtists.intersect(seed.artists).isNotEmpty() }
+        val artistHits = seeds.count { seed -> seed.artists.any(candidateArtists::contains) }
         val albumHits = seeds.count { seed -> seed.album == candidateAlbum && candidateAlbum.isNotBlank() }
-        val moodHits = seeds.sumOf { seed -> candidateMoods.intersect(seed.moodTags).size }
+        val moodHits = seeds.sumOf { seed -> seed.moodTags.count(candidateMoods::contains) }
         return artistHits * 180 + albumHits * 70 + moodHits * 18 +
             (if (isLanguagePreferred(track, languageCode)) 55 else 0) +
             recordingMetadataScore(track)

@@ -18,7 +18,10 @@ internal enum class SystemMediaCommand(val customAction: String) {
     DisableShuffle("levyra.system.shuffle.disable"),
     SetRepeatOff("levyra.system.repeat.off"),
     SetRepeatAll("levyra.system.repeat.all"),
-    SetRepeatOne("levyra.system.repeat.one");
+    SetRepeatOne("levyra.system.repeat.one"),
+    ResumePlayback("levyra.system.playback.resume"),
+    SkipNext("levyra.system.playback.next"),
+    SkipPrevious("levyra.system.playback.previous");
 
     companion object {
         fun fromCustomAction(customAction: String): SystemMediaCommand? =

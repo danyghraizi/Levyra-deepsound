@@ -18,7 +18,7 @@ class StartupBenchmark {
     @Test
     fun startupWithBaselineProfile() {
         rule.measureRepeated(
-            packageName = "com.luc4n3x.levyra",
+            packageName = "com.luc4n3x.levyra.debug",
             metrics = listOf(StartupTimingMetric()),
             compilationMode = CompilationMode.Partial(baselineProfileMode = BaselineProfileMode.Require),
             startupMode = StartupMode.COLD,

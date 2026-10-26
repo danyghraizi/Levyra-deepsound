@@ -18,10 +18,10 @@ android {
     testOptions {
         managedDevices {
             localDevices {
-                create("pixel6Api35") {
+                create("pixel6Api36") {
                     device = "Pixel 6"
-                    apiLevel = 35
-                    systemImageSource = "aosp"
+                    apiLevel = 36
+                    systemImageSource = "google_apis"
                 }
             }
         }
@@ -29,7 +29,7 @@ android {
 }
 
 baselineProfile {
-    managedDevices += "pixel6Api35"
+    managedDevices += "pixel6Api36"
     useConnectedDevices = false
 }
 

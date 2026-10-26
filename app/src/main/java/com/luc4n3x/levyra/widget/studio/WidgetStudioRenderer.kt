@@ -199,8 +199,7 @@ internal object WidgetStudioRenderer {
             }
         }
 
-        private fun rootIntent(): PendingIntent =
-            if (state.hasTrack) openApp(LevyraLaunchActions.SHORTCUT_PLAYER, 0) else openApp(null, 1)
+        private fun rootIntent(): PendingIntent = openApp(null, 0)
 
         fun bindProgressOnly() {
             bindProgress()

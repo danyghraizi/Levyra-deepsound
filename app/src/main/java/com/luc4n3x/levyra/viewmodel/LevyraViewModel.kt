@@ -1194,6 +1194,7 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
     private var chartEnrichJob: Job? = null
     private var chartArtworkJob: Job? = null
     private var orbitArtworkJob: Job? = null
+    private var orbitHistoryJob: Job? = null
     private var motionArtworkJob: Job? = null
     @Volatile private var motionArtworkRequestKey: String? = null
     @Volatile private var motionArtworkRequestGeneration: Long = 0L
@@ -1696,17 +1697,21 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
             settings.languageCode
         )
         val startupOrbitSeed = mergeTracks(rawCachedOrbitTracks + repairedRecentSearches + favorites, startupHomeTracks + startupCharts)
-        val cachedOrbitTracks = LevyraPersonalOrbit.build(
-            currentTrack = null,
-            recentSearches = repairedRecentSearches,
-            favorites = favorites,
-            tracks = startupOrbitSeed,
-            homeSections = startupHomeSections,
-            charts = startupCharts,
-            cachedOrbit = rawCachedOrbitTracks,
-            limit = LevyraPersonalOrbit.DISPLAY_LIMIT,
-            languageCode = settings.languageCode
-        )
+        val cachedOrbitTracks = if (rawCachedOrbitTracks.isNotEmpty()) {
+            rawCachedOrbitTracks
+        } else {
+            LevyraPersonalOrbit.build(
+                currentTrack = null,
+                recentSearches = repairedRecentSearches,
+                favorites = favorites,
+                tracks = startupOrbitSeed,
+                homeSections = startupHomeSections,
+                charts = startupCharts,
+                cachedOrbit = rawCachedOrbitTracks,
+                limit = LevyraPersonalOrbit.DISPLAY_LIMIT,
+                languageCode = settings.languageCode
+            )
+        }
         val initialTracks = mergeTracks(cachedOrbitTracks + repairedRecentSearches + favorites, startupHomeTracks + startupCharts)
         val startupInstantAlbums = instantAlbumRecommendationsFromTracks(
             primary = repairedRecentSearches + favorites,
@@ -1984,9 +1989,9 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
         }
         refreshListeningPulse(force = true)
         scheduleColdStartRefresh(initialTracks)
-        LevyraWidgetBridge.onToggle = { togglePlay() }
-        LevyraWidgetBridge.onNext = { next() }
-        LevyraWidgetBridge.onPrevious = { previous() }
+        LevyraWidgetBridge.onToggle = { widgetTogglePlayback() }
+        LevyraWidgetBridge.onNext = { widgetSkip(forward = true) }
+        LevyraWidgetBridge.onPrevious = { widgetSkip(forward = false) }
         updateWidget()
         refreshHomeResonanceComments(startupResonanceTracks)
     }
@@ -4117,25 +4122,8 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
         return size
     }
 
-    private fun deleteDownloadedMedia(download: DownloadedTrack): Boolean {
-        if (download.uri.isBlank()) return true
-        return runCatching {
-            val uri = Uri.parse(download.uri)
-            when (uri.scheme?.lowercase()) {
-                "content" -> {
-                    val resolver = getApplication<Application>().contentResolver
-                    val deletedRows = resolver.delete(uri, null, null)
-                    if (deletedRows > 0) {
-                        true
-                    } else {
-                        resolver.openAssetFileDescriptor(uri, "r")?.use { false } ?: true
-                    }
-                }
-                "file" -> uri.path?.let(::File)?.let { file -> !file.exists() || file.delete() } ?: true
-                else -> File(download.uri).let { file -> !file.exists() || file.delete() }
-            }
-        }.getOrDefault(false)
-    }
+    private fun deleteDownloadedMedia(download: DownloadedTrack): Boolean =
+        com.luc4n3x.levyra.data.local.deleteDownloadedMediaFile(getApplication(), download.uri)
 
     private fun onTrackCompleted() {
         val snapshot = _state.value
@@ -9244,6 +9232,11 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
     private fun recordPlaybackHistory(track: Track) {
         if (track.title.isBlank() || track.artist.isBlank()) return
         val snapshot = _state.value
+        val identity = LevyraPersonalOrbit.identityKey(track)
+        if (
+            snapshot.personalOrbitTracks.isNotEmpty() &&
+            snapshot.recentSearches.firstOrNull()?.let(LevyraPersonalOrbit::identityKey) == identity
+        ) return
         val artworkDonors = buildList {
             addAll(snapshot.personalOrbitTracks)
             addAll(snapshot.recentSearches)
@@ -9252,37 +9245,43 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
             addAll(snapshot.favorites)
             addAll(snapshot.tracks)
         }
-        val stableTrack = LevyraPersonalOrbit.prepareForOrbit(track, artworkDonors)
-        val updated = (listOf(stableTrack) + snapshot.recentSearches)
-            .distinctBy { LevyraPersonalOrbit.identityKey(it) }
-            .take(LevyraPersonalOrbit.DISPLAY_LIMIT)
-        val orbit = LevyraPersonalOrbit.build(
-            currentTrack = stableTrack,
-            recentSearches = updated,
-            favorites = snapshot.favorites,
-            tracks = snapshot.tracks,
-            homeSections = snapshot.homeSections,
-            charts = snapshot.charts,
-            cachedOrbit = snapshot.personalOrbitTracks,
-            limit = LevyraPersonalOrbit.DISPLAY_LIMIT,
-            languageCode = snapshot.languageCode,
-            discoveries = smartOrbitDiscoveries,
-            excluded = smartOrbitExclusion()
-        )
-        _state.update { it.copy(recentSearches = updated, personalOrbitTracks = orbit) }
-        val appContext = getApplication<Application>().applicationContext
-        if (LevyraPersonalOrbit.hasAnyArtwork(stableTrack)) {
-            LevyraArtworkCache.preloadPriority(appContext, listOf(stableTrack), 1)
-        }
-        viewModelScope.launch(Dispatchers.IO) {
-            preferences.saveRecentSearches(updated)
-            preferences.savePersonalOrbitTracks(orbit, snapshot.languageCode)
-            if (LevyraPersonalOrbit.hasAnyArtwork(stableTrack)) {
-                LevyraArtworkCache.cachePersistent(appContext, listOf(stableTrack), 1)
+        orbitHistoryJob?.cancel()
+        orbitHistoryJob = viewModelScope.launch(Dispatchers.Default) {
+            val stableTrack = LevyraPersonalOrbit.prepareForOrbit(track, artworkDonors)
+            val updated = (listOf(stableTrack) + snapshot.recentSearches)
+                .distinctBy { LevyraPersonalOrbit.identityKey(it) }
+                .take(LevyraPersonalOrbit.DISPLAY_LIMIT)
+            val orbit = LevyraPersonalOrbit.build(
+                currentTrack = stableTrack,
+                recentSearches = updated,
+                favorites = snapshot.favorites,
+                tracks = snapshot.tracks,
+                homeSections = snapshot.homeSections,
+                charts = snapshot.charts,
+                cachedOrbit = snapshot.personalOrbitTracks,
+                limit = LevyraPersonalOrbit.DISPLAY_LIMIT,
+                languageCode = snapshot.languageCode,
+                discoveries = smartOrbitDiscoveries,
+                excluded = smartOrbitExclusion()
+            )
+            ensureActive()
+            withContext(Dispatchers.Main.immediate) {
+                _state.update { it.copy(recentSearches = updated, personalOrbitTracks = orbit) }
             }
-        }
-        if (needsOfficialMetadata(stableTrack)) {
-            refreshOfficialOrbitArtwork(stableTrack)
+            val appContext = getApplication<Application>().applicationContext
+            if (LevyraPersonalOrbit.hasAnyArtwork(stableTrack)) {
+                LevyraArtworkCache.preloadPriority(appContext, listOf(stableTrack), 1)
+            }
+            withContext(Dispatchers.IO) {
+                preferences.saveRecentSearches(updated)
+                preferences.savePersonalOrbitTracks(orbit, snapshot.languageCode)
+                if (LevyraPersonalOrbit.hasAnyArtwork(stableTrack)) {
+                    LevyraArtworkCache.cachePersistent(appContext, listOf(stableTrack), 1)
+                }
+            }
+            if (needsOfficialMetadata(stableTrack)) {
+                withContext(Dispatchers.Main.immediate) { refreshOfficialOrbitArtwork(stableTrack) }
+            }
         }
     }
 
@@ -10349,9 +10348,7 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun normalizeDownloadMatch(value: String): String =
-        value.lowercase(Locale.ROOT)
-            .replace(Regex("[^a-z0-9]+"), " ")
-            .trim()
+        com.luc4n3x.levyra.data.local.normalizeDownloadText(value)
 
     private fun cancelResolutionSideJobs(preserveMotionPrefetchKey: String? = null) {
         modeSwitchJob?.cancel()
@@ -13360,6 +13357,19 @@ class LevyraViewModel(application: Application) : AndroidViewModel(application) 
             }
             onReady(terminateProcess)
         }
+    }
+
+    private fun widgetTogglePlayback(): Boolean {
+        if (_state.value.currentTrack == null) return false
+        togglePlay()
+        return true
+    }
+
+    private fun widgetSkip(forward: Boolean): Boolean {
+        val current = _state.value.currentTrack ?: return false
+        if (current.isLiveRadio()) return false
+        if (forward) next() else previous()
+        return true
     }
 
     fun next() {

@@ -1565,6 +1565,7 @@ class PlaybackService : MediaLibraryService() {
         mediaSession = MediaLibrarySession.Builder(this, forwardingPlayer, callback)
             .setSessionActivity(sessionActivity)
             .setMediaButtonPreferences(systemActions.initialButtons())
+            .setBitmapLoader(LevyraBitmapLoader(this))
             .build()
             .also(systemActions::attach)
             .also(studioWidgetSync::attach)
@@ -1626,8 +1627,77 @@ class PlaybackService : MediaLibraryService() {
                 }
                 clearPreparedQueueNextIfStaleInternal()
             }
+            SystemMediaCommand.ResumePlayback -> return resumeQueuePlayback()
+            SystemMediaCommand.SkipNext, SystemMediaCommand.SkipPrevious -> {
+                return skipQueueFromSystem(forward = command == SystemMediaCommand.SkipNext)
+            }
         }
         return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+    }
+
+    private fun resumeQueuePlayback(): ListenableFuture<SessionResult> {
+        val result = SettableFuture.create<SessionResult>()
+        serviceScope.launch {
+            try {
+                val player = mediaSession?.player
+                if (player == null) {
+                    result.set(SessionResult(androidx.media3.session.SessionError.ERROR_INVALID_STATE))
+                    return@launch
+                }
+                if (player.mediaItemCount > 0) {
+                    player.play()
+                    result.set(SessionResult(SessionResult.RESULT_SUCCESS))
+                    return@launch
+                }
+                val snapshot = restoreQueueSnapshot()
+                val track = snapshot.currentTrack
+                if (track == null || track.isLiveRadio()) {
+                    result.set(SessionResult(androidx.media3.session.SessionError.ERROR_INVALID_STATE))
+                    return@launch
+                }
+                result.set(SessionResult(SessionResult.RESULT_SUCCESS))
+                restoreCurrentPlayback(
+                    positionMs = snapshot.positionMs,
+                    preferFreshResolution = !isLocalPlaybackTrack(track),
+                    activeRecovery = false,
+                    userInitiated = true
+                )
+            } catch (cancelled: CancellationException) {
+                result.cancel(false)
+                throw cancelled
+            } catch (error: Exception) {
+                Timber.w(error, "Widget resume failed")
+                result.set(SessionResult(androidx.media3.session.SessionError.ERROR_UNKNOWN))
+            }
+        }
+        return result
+    }
+
+    private fun skipQueueFromSystem(forward: Boolean): ListenableFuture<SessionResult> {
+        val result = SettableFuture.create<SessionResult>()
+        serviceScope.launch {
+            try {
+                if (activePlayer == null) {
+                    result.set(SessionResult(androidx.media3.session.SessionError.ERROR_INVALID_STATE))
+                    return@launch
+                }
+                val snapshot = restoreQueueSnapshot()
+                val track = snapshot.currentTrack
+                if (track == null || track.isLiveRadio()) {
+                    result.set(SessionResult(androidx.media3.session.SessionError.ERROR_INVALID_STATE))
+                    return@launch
+                }
+                result.set(SessionResult(SessionResult.RESULT_SUCCESS))
+                skipQueue(forward = forward, respectRepeatOne = false)
+            } catch (cancelled: CancellationException) {
+                result.cancel(false)
+                throw cancelled
+            } catch (error: Exception) {
+                Timber.w(error, "Widget skip failed")
+                result.set(SessionResult(androidx.media3.session.SessionError.ERROR_UNKNOWN))
+            }
+        }
+        return result
     }
 
     private fun canSkipToPreviousTrack(): Boolean {
@@ -1660,17 +1730,26 @@ class PlaybackService : MediaLibraryService() {
         queueSkipJob = serviceScope.launch {
             val player = activePlayer ?: return@launch
             if (allowRewind && rewindInsteadOfSkip(player, forward)) return@launch
+            val resumeOnFailure = !autoAdvance && player.playWhenReady
             if (!autoAdvance) {
                 // Manual skip: stop the current song straight away instead of letting it play
                 // while the next stream resolves.
                 runCatching { player.pause() }
             }
+            fun restoreOnFailure() {
+                if (!resumeOnFailure) return
+                runCatching { player.play() }
+            }
             val target = withContext(Dispatchers.IO) {
                 selectSkipTarget(forward, respectRepeatOne)
-            } ?: return@launch
+            } ?: run {
+                restoreOnFailure()
+                return@launch
+            }
             val resolved = withContext(Dispatchers.IO) {
                 resolveSkipTarget(target, autoAdvance)
             } ?: run {
+                restoreOnFailure()
                 abandonAutoAdvance(target, autoAdvance)
                 return@launch
             }
@@ -1977,7 +2056,9 @@ class PlaybackService : MediaLibraryService() {
         if (track.isPersonalCollectionTrack()) return resolver.resolve(track)
         if (isLocalPlaybackTrack(track)) {
             if (!isLocalPlaybackUri(track.streamUrl)) {
-                throw IOException("File offline non disponibile per ${track.title}")
+                val restoredUri = resolveLocalQueueMediaUri(track)
+                    ?: throw IOException("File offline non disponibile per ${track.title}")
+                return track.copy(streamUrl = restoredUri, videoStreamUrl = "")
             }
             return track.copy(videoStreamUrl = "")
         }
@@ -3275,11 +3356,12 @@ class PlaybackService : MediaLibraryService() {
     private suspend fun restoreCurrentPlayback(
         positionMs: Long,
         preferFreshResolution: Boolean,
-        activeRecovery: Boolean
+        activeRecovery: Boolean,
+        userInitiated: Boolean = false
     ): Boolean {
         val player = mediaSession?.player ?: return false
         if (isLiveRadioMediaItem(player.currentMediaItem)) return false
-        if (!playbackStateStore.getBoolean(KEY_PLAYBACK_EXPECTED, false)) return false
+        if (!userInitiated && !playbackStateStore.getBoolean(KEY_PLAYBACK_EXPECTED, false)) return false
         val currentItem = player.currentMediaItem
         val queueSnapshot = queueEngine.state.value
         val queueTrack = queueSnapshot.currentTrack
@@ -3289,7 +3371,13 @@ class PlaybackService : MediaLibraryService() {
                 when {
                     isLocalPlaybackUri(queueTrack.streamUrl) -> LevyraMediaItemFactory.build(queueTrack, false)
                     isLocalMediaItem(currentItem) -> currentItem
-                    else -> null
+                    else -> resolveLocalQueueMediaUri(queueTrack)?.let { restoredUri ->
+                        val hydrated = queueTrack.copy(streamUrl = restoredUri, videoStreamUrl = "")
+                        if (queueSnapshot.currentIndex >= 0) {
+                            queueEngine.updateTrackAt(queueSnapshot.currentIndex, hydrated)
+                        }
+                        LevyraMediaItemFactory.build(hydrated, false)
+                    }
                 }
             }
             isLocalMediaItem(currentItem) -> currentItem
@@ -3332,6 +3420,7 @@ class PlaybackService : MediaLibraryService() {
         RuntimeHooks.hot(RuntimeSignal.HOT_PLAYER_PREPARE)
         player.prepare()
         player.play()
+        if (userInitiated) markPlaybackExpected(true, force = true)
         updatePlaybackProtection(player)
         return true
     }

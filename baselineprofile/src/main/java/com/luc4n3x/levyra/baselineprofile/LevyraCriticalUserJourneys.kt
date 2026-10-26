@@ -28,6 +28,33 @@ internal fun MacrobenchmarkScope.launchAndExerciseLevyra() {
     device.waitForIdle()
     device.findObject(By.scrollable(true))?.scroll(Direction.DOWN, 0.6f)
     device.waitForIdle()
+    device.findObject(By.desc("Home"))?.click()
+        ?: device.findObject(By.text("Home"))?.click()
+    device.waitForIdle()
+    startPlaybackAndOpenPlayer()
+    exerciseTabSwitches()
+}
+
+private fun MacrobenchmarkScope.startPlaybackAndOpenPlayer() {
+    device.findObject(By.text("Play all"))?.click()
+        ?: device.findObject(By.desc("Play all"))?.click()
+    device.waitForIdle()
+    device.wait(Until.hasObject(By.desc("Pause")), 8_000L)
+    device.waitForIdle()
+    device.click(device.displayWidth / 2, (device.displayHeight * 0.86f).toInt())
+    device.wait(Until.hasObject(By.descContains("Queue")), 5_000L)
+    device.waitForIdle()
+    device.pressBack()
+    device.waitForIdle()
+}
+
+private fun MacrobenchmarkScope.exerciseTabSwitches() {
+    listOf("Search", "Explore", "Library", "Home").forEach { label ->
+        val tab = device.findObject(By.desc(label)) ?: device.findObject(By.text(label))
+        if (tab == null) return@forEach
+        runCatching { tab.click() }
+        device.waitForIdle()
+    }
 }
 
 private fun MacrobenchmarkScope.dismissOnboardingIfPresent() {

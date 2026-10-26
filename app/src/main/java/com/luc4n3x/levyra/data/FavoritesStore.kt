@@ -2,6 +2,8 @@ package com.luc4n3x.levyra.data
 
 import android.content.Context
 import com.luc4n3x.levyra.data.local.LevyraDatabase
+import com.luc4n3x.levyra.data.local.deleteDownloadedMediaFile
+import com.luc4n3x.levyra.data.local.favoriteDownloadMatches
 import com.luc4n3x.levyra.data.local.toFavoriteTrackEntity
 import com.luc4n3x.levyra.data.local.toTrack
 import com.luc4n3x.levyra.data.locallibrary.localArtworkModel
@@ -74,7 +76,7 @@ class FavoritesStore(context: Context) {
     }
 
     suspend fun toggleFavorite(track: Track): List<Track> = withContext(Dispatchers.IO) {
-        val (updated, added) = favoritesStoreMutationMutex.withLock {
+        val (updated, added, removed) = favoritesStoreMutationMutex.withLock {
             val current = loadInternal()
             val targetKey = favoriteTrackKey(track)
             val existingIndex = current.indexOfFirst { favorite ->
@@ -86,22 +88,47 @@ class FavoritesStore(context: Context) {
                 listOf(track) + current
             }
             saveAndCompleteMigration(updated)
-            updated to if (existingIndex >= 0) emptyList() else listOf(track)
+            Triple(updated, if (existingIndex >= 0) emptyList() else listOf(track), existingIndex >= 0)
         }
+        if (removed) removeDownloadedCopies(track)
         FavoriteAutoDownloader.enqueue(appContext, added)
         updated
     }
 
     suspend fun setFavorite(track: Track, favorite: Boolean): List<Track> = withContext(Dispatchers.IO) {
-        val (updated, added) = favoritesStoreMutationMutex.withLock {
+        val (updated, added, removed) = favoritesStoreMutationMutex.withLock {
             val current = loadInternal(failOnReadError = true)
             val alreadyFavorite = current.any { favoriteTrackKey(it) == favoriteTrackKey(track) }
             val updated = favoriteTracksWithMembership(current, track, favorite)
             if (updated != current) saveAndCompleteMigration(updated)
-            updated to if (favorite && !alreadyFavorite) listOf(track) else emptyList()
+            Triple(
+                updated,
+                if (favorite && !alreadyFavorite) listOf(track) else emptyList(),
+                !favorite && alreadyFavorite
+            )
         }
+        if (removed) removeDownloadedCopies(track)
         FavoriteAutoDownloader.enqueue(appContext, added)
         updated
+    }
+
+    private suspend fun removeDownloadedCopies(track: Track) {
+        runCatching {
+            val downloadsDao = LevyraDatabase.get(appContext).downloadedTracksDao()
+            val candidates = buildList {
+                downloadsDao.byTrackId(track.id)?.let(::add)
+                addAll(downloadsDao.byTitle(track.title))
+            }.distinctBy { it.id }
+            candidates
+                .filter { download -> favoriteDownloadMatches(track.id, track.title, track.artist, download) }
+                .forEach { download ->
+                    if (deleteDownloadedMediaFile(appContext, download.uri)) {
+                        downloadsDao.deleteById(download.id)
+                    } else {
+                        Timber.w("Favorite download file removal failed for %s", download.title)
+                    }
+                }
+        }.onFailure { error -> Timber.w(error, "Favorite download cleanup failed") }
     }
 
     internal fun observeMembership(): Flow<FavoriteMembership> = dao.observeIdentities()

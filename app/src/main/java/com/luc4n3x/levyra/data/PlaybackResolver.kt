@@ -1822,7 +1822,8 @@ class PlaybackResolver private constructor(private val context: Context) {
                 durationMs = duration,
                 thumbnailUrl = thumbnail,
                 source = "YouTube Android Reel Audio",
-                manifest = manifest
+                manifest = manifest,
+                author = details?.optString("author").orEmpty()
             )
             rememberClientIdentity(reelStream.manifest)
             return track.withDirectStream(reelStream)
@@ -1977,7 +1978,8 @@ class PlaybackResolver private constructor(private val context: Context) {
             thumbnailUrl = thumbnail,
             source = "YouTube Android Reel · ${selection.reason}",
             manifest = manifest,
-            videoSubtitleTracks = videoSubtitleTracks(playerResponse)
+            videoSubtitleTracks = videoSubtitleTracks(playerResponse),
+            author = details?.optString("author").orEmpty()
         )
         rememberClientIdentity(reelStream.manifest)
         return track.withDirectStream(reelStream)
@@ -2662,7 +2664,13 @@ class PlaybackResolver private constructor(private val context: Context) {
             primary = this,
             donor = copy(thumbnailUrl = stream.thumbnailUrl, largeThumbnailUrl = stream.thumbnailUrl)
         )
+        val resolvedArtist = if (artist.isBlank()) {
+            stream.author.trim().removeSuffix(" - Topic").trim()
+        } else {
+            artist
+        }
         return artworkSafe.copy(
+            artist = resolvedArtist,
             streamUrl = stream.url,
             videoStreamUrl = stream.videoUrl,
             durationMs = stream.durationMs.takeIf { it > 0L } ?: durationMs,
@@ -3446,7 +3454,8 @@ class PlaybackResolver private constructor(private val context: Context) {
                             manifest = manifest,
                             loudnessDb = loudnessDb,
                             perceptualLoudnessDb = perceptualLoudnessDb,
-                            videoSubtitleTracks = videoSubtitleTracks
+                            videoSubtitleTracks = videoSubtitleTracks,
+                            author = details?.optString("author").orEmpty()
                         )
                     }
                     selection != null && bestAudioUrl.isNotBlank() -> {
@@ -3477,7 +3486,8 @@ class PlaybackResolver private constructor(private val context: Context) {
                             manifest = manifest,
                             loudnessDb = loudnessDb,
                             perceptualLoudnessDb = perceptualLoudnessDb,
-                            videoSubtitleTracks = videoSubtitleTracks
+                            videoSubtitleTracks = videoSubtitleTracks,
+                            author = details?.optString("author").orEmpty()
                         )
                     }
                     hlsUrl.isNotBlank() -> {
@@ -3500,6 +3510,7 @@ class PlaybackResolver private constructor(private val context: Context) {
                             manifest = manifest,
                             loudnessDb = loudnessDb,
                             perceptualLoudnessDb = perceptualLoudnessDb,
+                            author = details?.optString("author").orEmpty(),
                             videoSubtitleTracks = videoSubtitleTracks
                         )
                     }
@@ -3525,7 +3536,8 @@ class PlaybackResolver private constructor(private val context: Context) {
                             manifest = manifest,
                             loudnessDb = loudnessDb,
                             perceptualLoudnessDb = perceptualLoudnessDb,
-                            videoSubtitleTracks = videoSubtitleTracks
+                            videoSubtitleTracks = videoSubtitleTracks,
+                            author = details?.optString("author").orEmpty()
                         )
                     }
                     else -> {
@@ -3581,7 +3593,8 @@ class PlaybackResolver private constructor(private val context: Context) {
                 },
                 manifest = manifest,
                 loudnessDb = loudnessDb,
-                perceptualLoudnessDb = perceptualLoudnessDb
+                perceptualLoudnessDb = perceptualLoudnessDb,
+                author = details?.optString("author").orEmpty()
             )
         }
     }
@@ -4603,7 +4616,8 @@ private data class DirectStream(
     val manifest: ResolvedPlaybackManifest,
     val loudnessDb: Float? = null,
     val perceptualLoudnessDb: Float? = null,
-    val videoSubtitleTracks: List<com.luc4n3x.levyra.domain.VideoSubtitleTrack> = emptyList()
+    val videoSubtitleTracks: List<com.luc4n3x.levyra.domain.VideoSubtitleTrack> = emptyList(),
+    val author: String = ""
 )
 
 private class SabrDeliveryContext(

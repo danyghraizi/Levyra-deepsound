@@ -25998,8 +25998,6 @@ private fun PlayerArtworkMorphLayer(
 ) {
     val density = LocalDensity.current
     val startCornerPx = with(density) { LevyraPlayerDesign.MiniArtworkCorner.toPx() }
-    val fullWidthPx = anchors.fullBounds?.width ?: 0f
-    val cardCornerPx = with(density) { LevyraPlayerShapes.artworkCorner(fullWidthPx.toDp()).toPx() }
     val flightShadowPx = with(density) { PlayerMorphFlightShadow.toPx() }
     val artworkUrl = remember(track) { preferredPlayerArtworkUrl(track) }
     Box(
@@ -26030,7 +26028,12 @@ private fun PlayerArtworkMorphLayer(
                 }
                 val fraction = playerMorphFraction(expansion())
                 val flightAlpha = anchors.flightAlpha()
-                val endCornerPx = if (anchors.targetsStage) 0f else cardCornerPx
+                val fullWidthPx = anchors.fullBounds?.width ?: 0f
+                val endCornerPx = if (anchors.targetsStage) {
+                    0f
+                } else {
+                    with(density) { LevyraPlayerShapes.artworkCorner(fullWidthPx.toDp()).toPx() }
+                }
                 alpha = flightAlpha
                 shadowElevation = flightShadowPx * fraction * flightAlpha
                 shape = when (anchors.landing) {
